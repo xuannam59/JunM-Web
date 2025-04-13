@@ -1,20 +1,16 @@
 import { Form, Input, Button, Typography, Divider } from 'antd'
-import { UserOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useTheme } from '@/utils/ThemeProvider'
+import { FcGoogle } from 'react-icons/fc'
 import { ILoginForm } from '@/types/Auth'
-import { useState } from 'react'
 
 const { Title } = Typography
 
 const LoginPage = () => {
-  const { darkMode } = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { darkMode } = useTheme()
   const onFinish = (values: ILoginForm) => {
-    setIsLoading(true)
     console.log('Received values:', values)
-    setIsLoading(false)
   }
 
   const handleGoogleLogin = () => {
@@ -32,17 +28,20 @@ const LoginPage = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
         layout="vertical"
-        disabled={isLoading}
+        className="space-y-4"
       >
         <Form.Item
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            {type: "email", message: "Email improper format"}
+          ]}
         >
           <Input
             prefix={<UserOutlined className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Email"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
@@ -54,12 +53,12 @@ const LoginPage = () => {
             prefix={<LockOutlined className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Password"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
         <div className="flex justify-between items-center">
-          <Form.Item name="remember" valuePropName="checked" className="mb-0">
+          <Form.Item name="remember" valuePropName="checked" style={{marginBottom: 0}}>
             <label className={`flex items-center cursor-pointer ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               <input type="checkbox" className="mr-2" />
               <span>Remember me</span>
@@ -77,7 +76,6 @@ const LoginPage = () => {
             block 
             size="large"
             className="rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 border-none h-12 text-lg"
-
           >
             Login
           </Button>
@@ -86,7 +84,7 @@ const LoginPage = () => {
         <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
 
         <Button
-          icon={<GoogleOutlined />}
+          icon={<FcGoogle size={20} />}
           size="large"
           block
           onClick={handleGoogleLogin}

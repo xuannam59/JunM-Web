@@ -1,7 +1,8 @@
 import { Form, Input, Button, Typography, Divider } from 'antd'
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useTheme } from '@/utils/ThemeProvider'
+import { FcGoogle } from 'react-icons/fc'
+import { TbLock, TbMail, TbUser } from 'react-icons/tb'
 import { IRegisterForm } from '@/types/Auth'
 
 const { Title } = Typography
@@ -12,6 +13,10 @@ const RegisterPage = () => {
     console.log('Received values:', values)
   }
 
+  const handleGoogleRegister = () => {
+    console.log('Google register clicked')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-center items-center">
@@ -20,18 +25,20 @@ const RegisterPage = () => {
 
       <Form
         name="register"
+        initialValues={{ remember: true }}
         onFinish={onFinish}
         layout="vertical"
+        className="space-y-4"
       >
         <Form.Item
           name="username"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
           <Input
-            prefix={<UserOutlined className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbUser className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Username"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
@@ -39,14 +46,14 @@ const RegisterPage = () => {
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email!' }
+            {type: "email", message: "Email improper format"}
           ]}
         >
           <Input
-            prefix={<MailOutlined className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbMail className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Email"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
@@ -55,16 +62,15 @@ const RegisterPage = () => {
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
           <Input.Password
-            prefix={<LockOutlined className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbLock className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Password"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
         <Form.Item
           name="confirmPassword"
-          dependencies={['password']}
           rules={[
             { required: true, message: 'Please confirm your password!' },
             ({ getFieldValue }) => ({
@@ -78,10 +84,10 @@ const RegisterPage = () => {
           ]}
         >
           <Input.Password
-            prefix={<LockOutlined className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbLock className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Confirm Password"
             size="large"
-            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+            className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
 
@@ -96,6 +102,18 @@ const RegisterPage = () => {
             Register
           </Button>
         </Form.Item>
+
+        <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
+
+        <Button
+          icon={<FcGoogle />}
+          size="large"
+          block
+          onClick={handleGoogleRegister}
+          className="flex items-center justify-center gap-2 rounded-lg h-12 text-lg"
+        >
+          Continue with Google
+        </Button>
 
         <div className="text-center mt-4">
           <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>

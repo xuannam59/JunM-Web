@@ -1,6 +1,7 @@
 export interface ILoginForm {
     email: string, 
-    password: string
+    password: string,
+    remember: boolean
 }
 
 export interface IRegisterForm {
