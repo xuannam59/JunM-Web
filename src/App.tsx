@@ -1,9 +1,10 @@
-import { Routes } from "react-router-dom"
+import Routers from "./routers/Router"
+
 
 function App() {
 
   return (
-   <Routes/>
+   <Routers/>
   )
 }
 

@@ -7,21 +7,20 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-// Tạo Context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Provider để bọc toàn bộ ứng dụng
-export const ThemeProvider: React.FC<{children: ReactNode;}> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('theme') === 'dark';
   });
 
-  useEffect(() => {
-    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
-
   const toggleTheme = () => {
-    setDarkMode((prev) => !prev);
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem('theme', newMode ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', !darkMode);
+      return newMode;
+    });
   };
 
   return (
@@ -29,10 +28,6 @@ export const ThemeProvider: React.FC<{children: ReactNode;}> = ({ children }) =>
       <ConfigProvider
         theme={{
           algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-          token: {
-            colorPrimary: '#1890ff',
-            borderRadius: 4,
-          },
         }}
       >
         {children}
