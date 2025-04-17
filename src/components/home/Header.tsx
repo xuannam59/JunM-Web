@@ -23,8 +23,8 @@ const Header: React.FC = () => {
     ];
 
     return (
-        <header className={`px-[60px] h-[70px] fixed top-0 right-0 left-[240px] flex items-center shadow-sm`}>
-            <div className={`flex items-center justify-between w-full`}>
+        <>
+        <div className={`flex items-center justify-between w-full`}>
                 <div className="flex items-center gap-3">
                     <Button type="text" disabled icon={<TbArrowLeft size={20}/>} />
                     <Button type="text" disabled icon={<TbArrowRight size={20}/>} />
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
                     </Dropdown>
                 </div>
             </div>
-        </header>
+        </>
     );
 };
 

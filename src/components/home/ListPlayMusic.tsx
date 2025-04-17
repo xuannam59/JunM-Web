@@ -1,6 +1,6 @@
 import { useTheme } from "@/utils/ThemeProvider"
 
-const SiderBarRight = () => {
+const ListPlayMusic = () => {
     const { darkMode } = useTheme()
     return (
         <>
@@ -14,4 +14,4 @@ const SiderBarRight = () => {
   )
 }
 
-export default SiderBarRight
+export default ListPlayMusic

@@ -13,14 +13,13 @@ import {
     PlusCircleOutlined
 } from '@ant-design/icons'
 
-const SiderBarLeft = () => {
+const SiderBar = () => {
     const { darkMode } = useTheme()
     const navigate = useNavigate()
     const location = useLocation()
 
     const menuItems: MenuProps['items'] = [
         {
-            label: 'Menu',
             type: 'group',
             children: [
                 {
@@ -46,7 +45,6 @@ const SiderBarLeft = () => {
             ],
         },
         {
-            label: 'Library',
             type: 'group',
             children: [
                 {
@@ -62,7 +60,6 @@ const SiderBarLeft = () => {
             ],
         },
         {
-            label: 'Playlist and favorites',
             type: 'group',
             children: [
                 {
@@ -100,14 +97,13 @@ const SiderBarLeft = () => {
     }
 
     return (
-        <div className={`min-h-[100vh] max-h-[100vh] w-[240px] flex flex-col p-5 pb-0 pe-1 rounded-l-xl shadow-sm  overflow-y-auto
-            ${darkMode ? `bg-[#292929] text-gray-300` : 'bg-[#F9F9F9] text-black'}`}
-        >
-            <div className="flex justify-center">
-                <h1 className="text-xl font-bold mb-4 text-center w-fit
+        <>
+        <div className="flex flex-col items-center">
+            <div className="flex justify-center pt-3">
+                <span className="text-2xl font-bold mb-4 text-center w-fit
                 bg-gradient-to-r from-[#EE10B0] to-[#0E9EEF] text-transparent bg-clip-text">
                     JunMusic
-                </h1>
+                </span>
             </div>
 
             <Menu
@@ -121,8 +117,10 @@ const SiderBarLeft = () => {
                 }}
                 theme={darkMode ? 'dark' : 'light'}
             />
-        </div>
+             </div>
+        </>
+       
     )
 }
 
-export default SiderBarLeft
+export default SiderBar

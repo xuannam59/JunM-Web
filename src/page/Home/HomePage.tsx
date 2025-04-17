@@ -7,15 +7,17 @@ const Home: React.FC = () => {
   const { darkMode, toggleTheme } = useTheme();
 
   return (
-    <div className="w-full min-h-[100vh] flex justify-center items-center">
+    <>
       <div className="">
+        <div>
         <h1>Trang chủ</h1>
         <Button type="primary" onClick={toggleTheme}>
           Chuyển đổi {darkMode ? 'Sáng' : 'Tối'}
         </Button>
         <p>Đây là nội dung trang chủ.</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

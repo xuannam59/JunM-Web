@@ -1,31 +1,29 @@
 import { Outlet } from 'react-router-dom'
 import { useTheme } from '@/utils/ThemeProvider'
 import Header from '@/components/home/Header';
-import SiderBarLeft from '@/components/home/SiderBarLeft';
-import SiderBarRight from '@/components/home/SiderBarRight';
+import SiderBar from '@/components/home/SiderBar';
+
 const HomeLayout = () => {
   const { darkMode } = useTheme();
   return (
     <>
-      <div className={`w-full h-screen flex flex-col items-center justify-center 
-        `}
-      >
-        <div className={`min-h-screen w-full max-w-[2560px] flex items-center justify-start
-          ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-          <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300`}>
-            <SiderBarLeft />
-          </div>
-          <div className={`flex flex-col items-center justify-st w-full h-full overflow-hidden transition-all duration-300 
-            ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}`}>
-            <Header />
-            <div className="mt-[70px] w-full min-h-[100vh]">
-              <Outlet />
-            </div>
-          </div>
-          {/* <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300`}>
-            <SiderBarRight />
-          </div> */}
-        </div>
+      <div className={`min-h-screen w-full max-w-[2560px] flex ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+        <aside className={`w-[240px] min-h-[100vh] shadow-sm fixed left-0 top-0 bottom-0
+          ${darkMode ? `bg-[#292929] text-gray-300` : 'bg-[#F9F9F9] text-black'}`}
+        >
+          <SiderBar />
+        </aside>
+          
+        <header className={`px-[60px] h-[70px] fixed top-0 right-0 left-[240px] z-999 flex items-center backdrop-blur-md
+          ${darkMode ? 'bg-[#1E1E1E]/80' : 'bg-white/80'}`}>
+          <Header />
+        </header>
+
+        <main className={`w-full ml-[240px] mt-[70px] min-h-[calc(100vh-70px)] overflow-y-auto p-[60px]
+          ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}`}
+        >
+            <Outlet />
+        </main>
       </div>
     </>
   )
