@@ -18,11 +18,13 @@ const HomeLayout = () => {
           <div className={`flex flex-col items-center justify-st w-full h-full overflow-hidden transition-all duration-300 
             ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}`}>
             <Header />
-            <Outlet />
+            <div className="mt-[70px] w-full min-h-[100vh]">
+              <Outlet />
+            </div>
           </div>
-          <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300`}>
+          {/* <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300`}>
             <SiderBarRight />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
