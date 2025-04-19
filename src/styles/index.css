@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.custom-slider .ant-slider-handle {
+    display: none; 
+}
+  
+.custom-slider:hover .ant-slider-handle {
+    display: block !important;
+}

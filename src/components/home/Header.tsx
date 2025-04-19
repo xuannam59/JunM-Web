@@ -1,8 +1,9 @@
 import React from 'react';
 import { Input, Button, Avatar, Dropdown, MenuProps, Tooltip } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/utils/ThemeProvider';
 import { TbArrowLeft, TbArrowRight, TbLayoutDashboard, TbLogout, TbSearch, TbSettings, TbUser } from 'react-icons/tb';
+import { routes } from '@/utils/constant';
 
 const Header: React.FC = () => {
     const { darkMode, toggleTheme } = useTheme();
@@ -11,7 +12,7 @@ const Header: React.FC = () => {
     const items: MenuProps['items'] = [
        {
         key: "dashboard",
-        label: "Dashboard",
+        label: <Link to={routes.ADMIN}>Dashboard</Link>,
         icon: <TbLayoutDashboard size={24} />
        },
         {
@@ -35,7 +36,7 @@ const Header: React.FC = () => {
                     />
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     <Tooltip title="Cài đặt">
                     <div 
                         className={`${darkMode ? "bg-[#323232]" : "bg-[#F2F2F2]"} p-2 rounded-full cursor-pointer`}
@@ -44,6 +45,9 @@ const Header: React.FC = () => {
                         <TbSettings size={22} color={darkMode ? '#C2C2C2' :  "#42484E"}/>
                     </div>
                     </Tooltip>
+
+                    {/* <Button type='primary' onClick={() => navigate("/login")}>Đăng nhập</Button>
+                    <Button color="primary" variant="outlined" onClick={() => navigate("/register")}>Đăng ký</Button> */}
                     <Dropdown menu={{ items }} placement="bottomRight" trigger={["click"]} className='cursor-pointer'>
                         <Avatar icon={<TbUser size={22}/>}/>
                     </Dropdown>

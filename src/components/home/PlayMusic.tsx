@@ -1,13 +1,22 @@
+import { useTheme } from '@/utils/ThemeProvider';
 import { Button, Slider, Tooltip } from 'antd';
-import { useEffect, useState } from 'react';
-import { TbArrowsShuffle, TbDots, TbHeart, TbPlayerPlay, TbPlayerSkipBack, TbPlayerSkipForward, TbPlaylist, TbRepeat, TbVolume } from 'react-icons/tb';
+import React, { useEffect, useState } from 'react';
+import { TbArrowsShuffle, TbDots, TbHeart, TbPlayerPauseFilled, 
+  TbPlayerPlayFilled, TbPlayerSkipBack, TbPlayerSkipForward, 
+  TbPlaylist, TbRepeat, TbVolume } from 'react-icons/tb';
 
-const PlayMusic = () => {
+interface IProp {
+ 
+}
+
+const PlayMusic: React.FC<IProp> = () => {
+  const { darkMode } = useTheme();
   const [animation, setAnimation] = useState(false);
   const title = "Lorem ipsum dolor sit 12312323";
-
+  const  track = {
+    background: darkMode ? "#ffffff" : "#1890ff"
+  }
   useEffect(() => {
-    console.log(title.length)
     if(title.length >= 30) {
       setAnimation(true);
     }
@@ -54,54 +63,50 @@ const PlayMusic = () => {
             <div className="flex items-center gap-4">
               <Button icon={<TbArrowsShuffle size={22}/>} type='text'/>
               <Button icon={<TbPlayerSkipBack size={22}/>} type='text'/>
-              <Button type='text' icon={<TbPlayerPlay size={40} className='p-2 border-2 border-[#e0e0e0] rounded-full flex items-center'/>}/>
-              {/* <Button icon={<TbPlayerPause size={26}/>} type='text'/> */}
+              <Button 
+                size='large' 
+                color="default" 
+                variant="outlined" 
+                type='text' 
+                shape='circle' 
+                icon={<TbPlayerPlayFilled size={24} />}
+              />
+              {/* <Button type='text' icon={<TbPlayerPauseFilled size={40}
+              className={`p-2 border-2 ${darkMode ? "border-[#e0e0e0]": "border-black"} rounded-full flex items-center`}/>} /> */}
               <Button icon={<TbPlayerSkipForward size={22}/>} type='text'/>
               <Button icon={<TbRepeat size={22}/>} type='text'/>
             </div>
             {/* Progress bar */}
             <div className="w-full mt-1 h-fit">
               <div className="flex justify-center items-center">
-                <div className="w-fit mr-3.5">00.00</div>
-                <div className="w-full">
+                <div className="w-fit text-sm">00.00</div>
+                <div className="w-full mx-3">
                   <Slider
-                  className='!m-0 ' 
-                  tooltip={{formatter: null}}
-                  styles={{
-                    track: {
-                      backgroundColor: "#ffffff"
-                    },
-                    handle: {
-                      display: "none"
-                    }
-                  }}
+                    className='custom-slider !m-0' 
+                    tooltip={{formatter: null}}
+                    styles={{
+                      track: track,
+                    }}
                   />
                 </div>
-                <div className="w-fit ml-3.5">03.56</div>
+                <div className="w-fit text-sm">03.56</div>
               </div>
             </div>
           </div>
 
-          {/* Volume & Other Controls */}
           <div className="w-[30%] flex justify-end items-center cursor-pointer">
             <div className="flex items-center">
               <TbVolume size={22}/>
-              {/* <TbVolumeOff size={22}/> */}
               <Slider 
-              className='my-0 ml-2 w-[70px]' 
-              tooltip={{formatter: null}}
-              styles={{
-                track: {
-                  backgroundColor: "#ffffff"
-                },
-                handle: {
-                  display: "none"
-                }
-              }}
+                className='custom-slider my-0 ml-2 w-[70px]' 
+                tooltip={{formatter: null}}
+                styles={{
+                  track: track
+                }}
               />
             </div>
-            <div className="mx-5 h-[33px] border-1 border-[#303030] opacity-80"/>
-            <div className="p-1 bg-[#303030] rounded-sm cursor-pointer">
+            <div className={`mx-5 h-[33px] border-1 border-[#303030] opacity-10`}/>
+            <div className={`p-1 ${darkMode? "bg-[#303030]": "bg-[#F2F2F2]"}  rounded-sm cursor-pointer`}>
               <Tooltip title="Danh sách phát">
                 <TbPlaylist size={20}/>
               </Tooltip>

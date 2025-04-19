@@ -99,8 +99,8 @@ const SiderBar = () => {
     return (
         <>
         <div className="flex flex-col items-center">
-            <div className="flex justify-center pt-3">
-                <span className="text-2xl font-bold mb-4 text-center w-fit
+            <div className="flex justify-center pt-2">
+                <span className="text-2xl font-bold mb-2 text-center w-fit
                 bg-gradient-to-r from-[#EE10B0] to-[#0E9EEF] text-transparent bg-clip-text">
                     JunMusic
                 </span>

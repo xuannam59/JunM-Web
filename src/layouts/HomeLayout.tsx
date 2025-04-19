@@ -17,8 +17,8 @@ const HomeLayout = () => {
           <SiderBar />
         </aside>
           
-        <header className={`px-[60px] h-[70px] fixed top-0 right-0 left-[240px] z-999 flex items-center backdrop-blur-md
-          ${darkMode ? 'bg-[#1E1E1E]/80' : 'bg-white/80'}`}>
+        <header className={`px-[60px] h-[70px] fixed top-0 right-0 left-[240px] z-999 flex items-center backdrop-blur-md shadow-md
+          ${darkMode ? 'bg-[#1E1E1E]/80 ' : 'bg-white/80'}`}>
           <Header />
         </header>
 
@@ -27,7 +27,7 @@ const HomeLayout = () => {
         >
           <Outlet />
         </main>
-        
+
         <div className={`w-full h-[90px] px-[24px] flex justify-between items-center fixed bottom-0 left-0 right-0 z-50
           ${darkMode ? 'bg-[#181818] border-t border-[#282828]' : 'bg-white border-t border-[#e0e0e0]'}`}>
           <PlayMusic/>
