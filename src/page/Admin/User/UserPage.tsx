@@ -274,7 +274,7 @@ const UserPage = () => {
           pageSize: 10,
           showSizeChanger: true,
         }}
-        rowClassName={(record) => darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
+        rowClassName={() => darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
         scroll={{
           x: "max-content",
           y: 57*10
