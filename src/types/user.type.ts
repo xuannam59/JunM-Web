@@ -6,13 +6,13 @@ export interface IListeningHistory {
 
 export interface IUser {
     user_id: string;
-    username: string;
+    username?: string;
     email: string;
     full_name?: string;
     avatar?: string;
     number_phone?: string;
     role: string;
-    is_blocked: boolean;
+    google_id?: string;
     blocked_at?: Date;
     created_at?: Date
     updated_at?: Date;

@@ -1,4 +1,4 @@
-import { IGetAccountRes, ILoginForm, ILoginRes, IRegisterForm, IRegisterRes } from "@/types/Auth";
+import { IGetAccountRes, ILoginForm, ILoginRes, IRegisterForm, IRegisterRes } from "@/types/auth.type";
 import axios from "@/configs/axios-customize";
 import { IBackendRes } from "@/types/backend.type";
 

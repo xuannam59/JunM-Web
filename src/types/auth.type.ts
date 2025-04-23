@@ -1,3 +1,5 @@
+import { IUser } from "./user.type"
+
 export interface ILoginForm {
     email: string, 
     password: string,
@@ -6,14 +8,7 @@ export interface ILoginForm {
 
 export interface ILoginRes{
     access_token: string
-    user: {
-      user_id: string
-      email: string
-      username: string
-      role: string
-      avatar: string
-      number_phone: string
-    }
+    user: IUser
 }
 
 export interface IRegisterForm {

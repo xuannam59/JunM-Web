@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { useTheme } from '@/utils/ThemeProvider'
 import Lottie from 'lottie-react'
 import musicAnimation from '@/assets/animations/music.json'
+import { Image } from 'antd'
 
 const AuthLayout = () => {
   const { darkMode } = useTheme()
@@ -21,9 +22,16 @@ const AuthLayout = () => {
             : 'bg-white'
         }`}>
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
-              Music App
-            </h1>
+            <div className="flex justify-center items-center">
+              <Image 
+                src='/images/logo.webp' 
+                preview={false}
+                width={120}
+              />
+              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
+                 Music App
+              </h1>
+            </div>
             <p className={`mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Welcome to your music journey
             </p>

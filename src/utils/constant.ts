@@ -3,6 +3,7 @@ export const routes = {
     DEFAULT: "/",
     LOGIN: "login",
     REGISTER: "register",
+    GOOGLE: "google/:access_token",
     // admin
     ADMIN: "admin",
     ADMIN_USER: "users",

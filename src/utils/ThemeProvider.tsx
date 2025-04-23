@@ -1,6 +1,6 @@
 // src/ThemeProvider.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ConfigProvider, theme } from 'antd';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { App, ConfigProvider, theme } from 'antd';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -25,24 +25,26 @@ export const ThemeProvider: React.FC<{ children: ReactNode; }> = ({ children }) 
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
-      <ConfigProvider
-        theme={{
-          algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-          components: {
-            Table: {
-              headerBg: darkMode ? '#2A2A2A' : '#fafafa',
-              rowHoverBg: darkMode ? "#2A2A2A": "",
-              padding: 8
-            },
-            Pagination: {
-              itemBg: darkMode ? "#353535": "",
-              itemActiveBg: darkMode ? "#353535": "",
+      <App>
+        <ConfigProvider
+          theme={{
+            algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            components: {
+              Table: {
+                headerBg: darkMode ? '#2A2A2A' : '#fafafa',
+                rowHoverBg: darkMode ? "#2A2A2A": "",
+                padding: 8
+              },
+              Pagination: {
+                itemBg: darkMode ? "#353535": "",
+                itemActiveBg: darkMode ? "#353535": "",
+              }
             }
-          }
-        }}
-      >
-        {children}
-      </ConfigProvider>
+          }}
+        >
+          {children}
+        </ConfigProvider>
+      </App>
     </ThemeContext.Provider>
   );
 };

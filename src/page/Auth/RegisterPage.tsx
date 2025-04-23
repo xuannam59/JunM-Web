@@ -1,20 +1,35 @@
-import { Form, Input, Button, Typography, Divider } from 'antd'
-import { Link } from 'react-router-dom'
+import { Form, Input, Button, Typography, Divider, App } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTheme } from '@/utils/ThemeProvider'
-import { FcGoogle } from 'react-icons/fc'
 import { TbLock, TbMail, TbUser } from 'react-icons/tb'
-import { IRegisterForm } from '@/types/Auth'
+import { IRegisterForm } from '@/types/auth.type'
+import { useState } from 'react'
+import ButtonGoogleLogin from '@/components/auth/ButtonLoginGoogle'
+import { callRegister } from '@/apis/login.api'
+import { routes } from '@/utils/constant'
 
 const { Title } = Typography
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const {message, notification} = App.useApp();
+  const navigate = useNavigate();
   const { darkMode } = useTheme()
-  const onFinish = (values: IRegisterForm) => {
-    console.log('Received values:', values)
-  }
+  const [form] = Form.useForm();
 
-  const handleGoogleRegister = () => {
-    console.log('Google register clicked')
+  const onFinish = async (values: IRegisterForm) => {
+    setIsLoading(true);
+    const res = await callRegister(values);
+    if(res.data) {
+      message.success("Register successfully!");
+      navigate(`/${routes.LOGIN}`);
+    }else {
+      notification.error({
+        message: "Register Error",
+        description: res.message && Array.isArray(res.message) ? res.message.toString() : res.message
+      });
+    }
+    setIsLoading(false);
   }
 
   return (
@@ -29,13 +44,15 @@ const RegisterPage = () => {
         onFinish={onFinish}
         layout="vertical"
         className="space-y-4"
+        form={form}
+        disabled={isLoading}
       >
         <Form.Item
           name="username"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
           <Input
-            prefix={<TbUser className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbUser size={20} className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Username"
             size="large"
             className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
@@ -50,7 +67,7 @@ const RegisterPage = () => {
           ]}
         >
           <Input
-            prefix={<TbMail className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbMail size={20} className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Email"
             size="large"
             className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
@@ -62,7 +79,7 @@ const RegisterPage = () => {
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
           <Input.Password
-            prefix={<TbLock className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbLock size={20} className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Password"
             size="large"
             className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
@@ -84,46 +101,38 @@ const RegisterPage = () => {
           ]}
         >
           <Input.Password
-            prefix={<TbLock className={darkMode ? 'text-gray-400' : ''} />}
+            prefix={<TbLock size={20} className={darkMode ? 'text-gray-400' : ''} />}
             placeholder="Confirm Password"
             size="large"
             className={`rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50'}`}
           />
         </Form.Item>
-
-        <Form.Item>
-          <Button 
-            type="primary" 
-            htmlType="submit" 
-            block 
-            size="large"
-            className="rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 border-none h-12 text-lg"
-          >
-            Register
-          </Button>
-        </Form.Item>
-
-        <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
-
-        <Button
-          icon={<FcGoogle />}
-          size="large"
-          block
-          onClick={handleGoogleRegister}
-          className="flex items-center justify-center gap-2 rounded-lg h-12 text-lg"
-        >
-          Continue with Google
-        </Button>
-
-        <div className="text-center mt-4">
-          <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-            Already have an account?{' '}
-          </span>
-          <Link to="/login" className="text-blue-500 hover:underline font-medium">
-            Login
-          </Link>
-        </div>
       </Form>
+      <Button 
+        type="primary" 
+        htmlType="submit" 
+        block 
+        size="large"
+        className="rounded-lg !bg-gradient-to-r from-purple-500 to-pink-500 !border-none opacity-80 hover:opacity-100"
+        onClick={() => form.submit()}
+        loading={isLoading}
+      >
+        Register
+      </Button>
+
+    <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
+
+    <ButtonGoogleLogin isLoading={isLoading} />
+
+    <div className="text-center mt-4">
+      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+        Already have an account?{' '}
+      </span>
+      <Link to={`/${routes.LOGIN}`}className="text-blue-500 hover:underline font-medium">
+        Login
+      </Link>
+    </div>
+      
     </div>
   )
 }
