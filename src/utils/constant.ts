@@ -1,3 +1,6 @@
+import { UploadFile } from "antd";
+import { UploadChangeParam } from "antd/es/upload";
+
 export const routes = {
     // client
     DEFAULT: "/",
@@ -16,3 +19,26 @@ export const routes = {
 
     NOT_FOUND: "*"
 } as const;
+
+export const replaceSlug = (str: string): string => {
+    str = str.toLowerCase();
+    str = str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D');
+    str = str
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    return str;
+}
+
+export const handleChangeUpload = (setState: React.Dispatch<React.SetStateAction<UploadFile[]>>) =>
+    ({ fileList: newFileList }: UploadChangeParam<UploadFile>) =>
+        setState(newFileList.map((item) => ({
+            ...item,
+            url: item.originFileObj ? URL.createObjectURL(item.originFileObj) : item.url,
+            status: 'done'
+        })));

@@ -32,13 +32,13 @@ export const ThemeProvider: React.FC<{ children: ReactNode; }> = ({ children }) 
             components: {
               Table: {
                 headerBg: darkMode ? '#2A2A2A' : '#fafafa',
-                rowHoverBg: darkMode ? "#2A2A2A": "",
+                rowHoverBg: darkMode ? "#2A2A2A" : "",
                 padding: 8
               },
               Pagination: {
-                itemBg: darkMode ? "#353535": "",
-                itemActiveBg: darkMode ? "#353535": "",
-              }
+                itemBg: darkMode ? "#353535" : "",
+                itemActiveBg: darkMode ? "#353535" : "",
+              },
             }
           }}
         >

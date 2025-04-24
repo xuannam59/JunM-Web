@@ -1,14 +1,14 @@
 import { useTheme } from '@/utils/ThemeProvider'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Image, Menu } from 'antd'
 import type { MenuProps } from 'antd'
-import { 
-    HomeOutlined, 
-    CompassOutlined, 
-    CustomerServiceOutlined, 
-    ClockCircleOutlined, 
-    PlaySquareOutlined, 
-    HeartOutlined, 
+import {
+    HomeOutlined,
+    CompassOutlined,
+    CustomerServiceOutlined,
+    ClockCircleOutlined,
+    PlaySquareOutlined,
+    HeartOutlined,
     UnorderedListOutlined,
     PlusCircleOutlined
 } from '@ant-design/icons'
@@ -98,29 +98,27 @@ const SiderBar = () => {
 
     return (
         <>
-        <div className="flex flex-col items-center">
-            <div className="flex justify-center items-center pt-2 h-[70px]">
-                <Image src='/images/logo.webp' width={100} preview={false}/>
-                <span className="text-2xl font-bold text-center w-fit
-                bg-gradient-to-r from-[#EE10B0] to-[#0E9EEF] text-transparent bg-clip-text">
-                    JunMusic
-                </span>
-            </div>
+            <div className="flex flex-col items-center">
+                <div className="flex justify-center items-center pt-2 h-[70px]">
+                    <Link to="/">
+                        <Image src='/images/logo.webp' width={120} preview={false} />
+                    </Link>
+                </div>
 
-            <Menu
-                mode="inline"
-                selectedKeys={[location.pathname]}
-                items={menuItems}
-                onClick={handleMenuClick}
-                className={`border-0 ${darkMode ? '!bg-[#292929]' : '!bg-[#F9F9F9]'} !border-none`}
-                style={{
-                    fontSize: '14px',
-                }}
-                theme={darkMode ? 'dark' : 'light'}
-            />
-             </div>
+                <Menu
+                    mode="inline"
+                    selectedKeys={[location.pathname]}
+                    items={menuItems}
+                    onClick={handleMenuClick}
+                    className={`border-0 ${darkMode ? '!bg-[#292929]' : '!bg-[#F9F9F9]'} !border-none`}
+                    style={{
+                        fontSize: '14px',
+                    }}
+                    theme={darkMode ? 'dark' : 'light'}
+                />
+            </div>
         </>
-       
+
     )
 }
 

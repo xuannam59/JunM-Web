@@ -13,9 +13,7 @@ export interface IBackendResWithPagination<T> {
         meta: {
             current: number;
             pageSize: number;
-            pages: number;
             totalItems: number;
-            reviewScore?: number
         };
         result: T[]
     };
