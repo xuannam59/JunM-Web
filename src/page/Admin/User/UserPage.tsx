@@ -1,13 +1,13 @@
 import { callDeleteUser, callGetUsers } from '@/apis/user.api';
+import TableCommon from '@/components/common/TableCommon';
+import TitleCommon from '@/components/common/TitleCommon';
+import UserModal from '@/components/modals/UserModal';
 import { IUser } from '@/types/user.type';
 import { useTheme } from '@/utils/ThemeProvider';
-import { App, Avatar, Button, Dropdown, Input, MenuProps, Table, Tag, Tooltip } from 'antd';
-import { ColumnsType, TableProps } from 'antd/es/table';
-import { SorterResult } from 'antd/es/table/interface';
+import { App, Avatar, Tag } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { TbDots, TbEdit, TbReload, TbSearch, TbTrash } from 'react-icons/tb';
-import UserModal from '@/components/modals/UserModal';
 
 const UserPage = () => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -42,24 +42,6 @@ const UserPage = () => {
         }
         setIsLoading(false);
     }
-
-    const getDropdownItems = (record: IUser): MenuProps['items'] => [
-        {
-            key: "edit",
-            label: <div className='flex gap-2 text-amber-400'><TbEdit size={20} /> <span>Edit</span></div>,
-            onClick: () => {
-                setSelectedUser(record);
-                setIsModalOpen(true);
-            }
-        },
-        {
-            key: "delete",
-            label: "Delete",
-            icon: <TbTrash size={20} />,
-            danger: true,
-            onClick: () => handleDelete(record.user_id)
-        }
-    ]
 
     const columns: ColumnsType<IUser> = [
         {
@@ -149,17 +131,6 @@ const UserPage = () => {
             ),
         },
         {
-            title: 'Deleted',
-            dataIndex: 'is_deleted',
-            key: 'is_deleted',
-            align: "center",
-            render: (is_deleted: boolean) => (
-                <Tag color={is_deleted ? '#f50' : '#87d068'}>
-                    {is_deleted ? "Deleted" : "Normal"}
-                </Tag>
-            ),
-        },
-        {
             title: 'Created At',
             dataIndex: 'created_at',
             key: 'created_at',
@@ -167,58 +138,7 @@ const UserPage = () => {
             sorter: true,
             render: (created_at: Date) => dayjs(created_at).format("DD/MM/YYYY"),
         },
-        {
-            title: 'Deleted At',
-            dataIndex: 'deleted_at',
-            key: 'deleted_at',
-            align: "center",
-            sorter: true,
-            width: 120,
-            render: (deleted_at: Date) => {
-                return <>
-                    {deleted_at ? dayjs(deleted_at).format("DD/MM/YYYY") : "--"}
-                </>
-            },
-        },
-        {
-            key: 'action',
-            render: (_, record) => (
-                <Dropdown
-                    menu={{
-                        items: getDropdownItems(record),
-                        style: { backgroundColor: darkMode ? "#333333" : "#ffffff" }
-                    }}
-                >
-                    <Button type="text" icon={<TbDots size={20} />} />
-                </Dropdown>
-            ),
-        },
     ];
-
-    const onChangePagination: TableProps<IUser>['onChange'] = (pagination, filters, sorter) => {
-        if (pagination.current && pagination.current !== current) {
-            setCurrent(pagination.current);
-        }
-        if (pagination.pageSize && pagination.pageSize !== pageSize) {
-            setPageSize(pagination.pageSize);
-            setCurrent(1);
-        }
-
-        const sorterResult = sorter as SorterResult<IUser> | SorterResult<IUser>[];
-        let newSortQuery = '-created_at';
-
-        if (!Array.isArray(sorterResult)) {
-            const { field, order } = sorterResult;
-            if (order && field) {
-                newSortQuery = order === 'ascend' ? `${field}` : `-${field}`;
-            }
-        }
-
-        if (newSortQuery !== sortQuery) {
-            setSortQuery(newSortQuery);
-            setCurrent(1);
-        }
-    }
 
     const handleDelete = async (user_id: string) => {
         setIsLoading(true);
@@ -251,46 +171,29 @@ const UserPage = () => {
 
     return (
         <div className={`p-6 rounded-lg ${darkMode ? 'bg-[#353535]' : 'bg-white'}`}>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className={`text-2xl font-semibold ${darkMode ? 'text-white' : ''}`}>Users Management</h1>
-                <div className='flex gap-2'>
-                    <Input
-                        placeholder="Search users..."
-                        allowClear
-                        suffix={<TbSearch size={20} className="text-gray-400" />}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        className={` w-80 ${darkMode ? '!bg-[#353535] !border-gray-600 !text-white' : ''}`}
-                    />
-                    <Tooltip title={"Renew"}>
-                        <Button
-                            className={`!p-2 ${darkMode ? "!bg-[#353535]" : ""}`}
-                            onClick={() => {
-                                setSearchText("");
-                                setCurrent(1);
-                                setSortQuery("-created_at");
-                            }}
-                        ><TbReload size={20} /></Button>
-                    </Tooltip>
-                </div>
-            </div>
+            <TitleCommon
+            title='Users Management'
+            handleSearch={handleSearch}
+            onRenew={() => {
+                setSearchText("");
+                setCurrent(1);
+                setSortQuery("-created_at");
+            }}
+            buttonAdd={false}
+            />
 
-            <Table
-                loading={isLoading}
+            <TableCommon
+                isLoading={isLoading}
                 columns={columns}
-                dataSource={data}
-                pagination={{
-                    current: current,
-                    total: totalItem,
-                    pageSize: pageSize,
-                    showSizeChanger: true,
-                }}
-                onChange={onChangePagination}
-                rowClassName={() => darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
-                scroll={{
-                    x: "max-content",
-                    y: 57 * 10
-                }}
-                rowKey={"user_id"}
+                data={data}
+                currentState={{ current, setCurrent }}  
+                pageSizeState={{ pageSize, setPageSize }} 
+                totalItem={totalItem}
+                sortQueryState={{  sortQuery, setSortQuery }}
+                handleDelete={handleDelete}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedUser={setSelectedUser}
+                rowKey='user_id'
             />
 
             <UserModal
