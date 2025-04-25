@@ -33,13 +33,11 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }
                 role: user.role,
                 is_blocked: !user.is_blocked,
             }
-            if (user.avatar) {
-                setAvatarUrl([{
-                    uuid: "-1",
-                    url: user.avatar,
-                    status: "done"
-                }])
-            }
+            setAvatarUrl([{
+                uuid: "-1",
+                url: user.avatar || "/images/avatar-user.webp",
+                status: "done"
+            }])
             form.setFieldsValue(data);
         }
     }, [user]);
@@ -107,6 +105,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }
                 <Upload
                     accept='image/*'
                     fileList={avatarUrl}
+                    disabled
                     maxCount={1}
                     multiple={false}
                     listType='picture-card'
