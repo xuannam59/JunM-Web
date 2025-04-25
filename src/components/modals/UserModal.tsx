@@ -1,5 +1,5 @@
 import { IUser } from '@/types/user.type';
-import { App, Button, Form, Input, Modal, Select, Switch, Upload } from 'antd';
+import { App, Form, Input, Modal, Select, Switch, Upload } from 'antd';
 import { useTheme } from '@/utils/ThemeProvider';
 import React, { useEffect, useState } from 'react';
 import { TbUpload } from 'react-icons/tb';

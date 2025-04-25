@@ -14,7 +14,7 @@ export interface IUser {
     number_phone?: string;
     role: string;
     is_blocked: boolean;
-    is_deleted: boolean;
+    is_deleted?: boolean;
     blocked_at?: Date;
     created_at?: Date
     updated_at?: Date;

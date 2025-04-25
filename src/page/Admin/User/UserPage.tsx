@@ -10,6 +10,7 @@ import { TbDots, TbEdit, TbReload, TbSearch, TbTrash } from 'react-icons/tb';
 import UserModal from '@/components/modals/UserModal';
 
 const UserPage = () => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     const [isLoading, setIsLoading] = useState(false);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -32,7 +33,7 @@ const UserPage = () => {
         setIsLoading(true);
         let query = `current=${current}&pageSize=${pageSize}&sort=${sortQuery}`;
         if (searchText) {
-            query += ``;
+            query += `&search=${searchText}`;
         }
         const res = await callGetUsers(query);
         if (res.data) {
@@ -73,7 +74,7 @@ const UserPage = () => {
             title: 'Username',
             dataIndex: 'username',
             key: 'username',
-            minWidth: 100,
+            width: 100,
             render: (username: string) => {
                 return <>
                     <span>{username ?? "--"}</span>
@@ -172,6 +173,7 @@ const UserPage = () => {
             key: 'deleted_at',
             align: "center",
             sorter: true,
+            width: 120,
             render: (deleted_at: Date) => {
                 return <>
                     {deleted_at ? dayjs(deleted_at).format("DD/MM/YYYY") : "--"}
@@ -232,6 +234,21 @@ const UserPage = () => {
         setIsLoading(false);
     }
 
+    const handleSearch = (value: string) => {
+        console.log(value);
+        if(value.length > 3) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                setSearchText(value);
+                setCurrent(1);
+            }, 1000);
+        }else {
+            setSearchText("");
+            clearTimeout(timeoutId);
+        }
+
+    }
+
     return (
         <div className={`p-6 rounded-lg ${darkMode ? 'bg-[#353535]' : 'bg-white'}`}>
             <div className="flex justify-between items-center mb-6">
@@ -241,7 +258,7 @@ const UserPage = () => {
                         placeholder="Search users..."
                         allowClear
                         suffix={<TbSearch size={20} className="text-gray-400" />}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => handleSearch(e.target.value)}
                         className={` w-80 ${darkMode ? '!bg-[#353535] !border-gray-600 !text-white' : ''}`}
                     />
                     <Tooltip title={"Renew"}>
