@@ -1,26 +1,24 @@
 import { useTheme } from '@/utils/ThemeProvider';
-import { App, Button, Input, Tooltip } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import { TbPlus, TbReload, TbSearch } from 'react-icons/tb';
 
 interface IProps {
     title: string;
     handleSearch: (value: string) => void;
     onRenew: () => void;
-    buttonAdd?: boolean;
-    onAdd?: () => void;
+    onAdd?: (value: boolean) => void;
 }
 
 const TitleCommon = (props: IProps) => {
-    const { title, handleSearch, onRenew, buttonAdd = true, onAdd } = props;
+    const { title, handleSearch, onRenew, onAdd } = props;
     const { darkMode } = useTheme();
-    const {notification} = App.useApp();
 
     return (
         <div className="flex justify-between items-center mb-6">
             <h1 className={`text-2xl font-semibold ${darkMode ? 'text-white' : ''}`}>{title}</h1>
             <div className="flex gap-2">
                 <Input
-                    placeholder="Search users..."
+                    placeholder="Search..."
                     allowClear
                     suffix={<TbSearch size={20} className="text-gray-400" />}
                     onChange={(e) => handleSearch(e.target.value)}
@@ -34,15 +32,12 @@ const TitleCommon = (props: IProps) => {
                         <TbReload size={20} />
                     </Button>
                 </Tooltip>
-                {buttonAdd && (
+                {onAdd && (
                     <Tooltip title="Add">
                         <Button
                             type="primary"
                             className="!p-2 !bg-gradient-to-r from-purple-500 to-pink-500 !border-none opacity-80 hover:opacity-100"
-                            onClick={onAdd ? onAdd : () => notification.info({
-                                message: "Info",
-                                description: "Need Prop method onadd"
-                            }) }
+                            onClick={() => onAdd(true)}
                         >
                             <TbPlus size={20} /> Add
                         </Button>

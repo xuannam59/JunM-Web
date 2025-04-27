@@ -1,21 +1,19 @@
 import { IUser } from '@/types/user.type';
 import { App, Form, Input, Modal, Select, Switch, Upload } from 'antd';
 import { useTheme } from '@/utils/ThemeProvider';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbUpload } from 'react-icons/tb';
 import { handleChangeUpload } from '@/utils/constant';
 import { callEditUser } from '@/apis/user.api';
 
-interface UserModalProps {
+interface IProps {
     isOpen: boolean;
     onClose: () => void;
     user: IUser | null;
     loadData: () => Promise<void>
 }
 
-
-
-const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }) => {
+const UserModal = ({ isOpen, onClose, user, loadData }: IProps) => {
     const [form] = Form.useForm();
     const { darkMode } = useTheme();
     const { message, notification } = App.useApp();
@@ -98,6 +96,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }
             style={{ top: 50 }}
         >
             <Form
+                disabled={isLoading}
                 form={form}
                 layout="vertical"
                 onFinish={handleSubmit}
@@ -109,7 +108,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }
                     maxCount={1}
                     multiple={false}
                     listType='picture-card'
-                    className='mb-2'
+                    className='!mb-2'
                     onChange={handleChangeUpload(setAvatarUrl)}
                 >
                     {avatarUrl.length < 1 &&
@@ -122,7 +121,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, user, loadData }
                         </div>
                     }
                 </Upload>
-                <Form.Item name="user_id" />
+                <Form.Item name="user_id" hidden/>
 
                 <div className="grid grid-cols-2 gap-3">
                     <Form.Item

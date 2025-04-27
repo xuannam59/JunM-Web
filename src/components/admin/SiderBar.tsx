@@ -2,10 +2,11 @@ import { routes } from '@/utils/constant';
 import { useTheme } from '@/utils/ThemeProvider';
 import { Image, Menu } from 'antd'
 import { TbAlbum, TbLayoutDashboard, TbMicrophone2, TbMusic, TbPlaylist, TbSettings, TbUser, TbVideo } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const SiderBar = () => {
     const { darkMode } = useTheme()
+    const location = useLocation();
     const menuItems = [
         {
             key: `/${routes.ADMIN}`,

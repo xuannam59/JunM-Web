@@ -3,7 +3,6 @@ import TableCommon from '@/components/common/TableCommon';
 import TitleCommon from '@/components/common/TitleCommon';
 import UserModal from '@/components/modals/UserModal';
 import { IUser } from '@/types/user.type';
-import { useTheme } from '@/utils/ThemeProvider';
 import { App, Avatar, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -22,8 +21,6 @@ const UserPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { message, notification } = App.useApp();
-
-    const { darkMode } = useTheme();
 
     useEffect(() => {
         getUsers()
@@ -44,6 +41,12 @@ const UserPage = () => {
     }
 
     const columns: ColumnsType<IUser> = [
+        {
+            key: "index",
+            render: (_,_1, index) => {
+                return (current - 1)*pageSize + index + 1
+            }
+        },
         {
             title: 'Avatar',
             dataIndex: 'avatar',
@@ -140,11 +143,12 @@ const UserPage = () => {
         },
     ];
 
-    const handleDelete = async (user_id: string) => {
+    const handleDelete = async (record: any) => {
         setIsLoading(true);
-        const res = await callDeleteUser(user_id);
+        const res = await callDeleteUser(record.user_id);
         if (res.data) {
             message.success(res.data);
+            getUsers()
         } else {
             notification.error({
                 message: "Delete error",
@@ -155,7 +159,6 @@ const UserPage = () => {
     }
 
     const handleSearch = (value: string) => {
-        console.log(value);
         if(value.length > 3) {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
@@ -170,16 +173,13 @@ const UserPage = () => {
     }
 
     return (
-        <div className={`p-6 rounded-lg ${darkMode ? 'bg-[#353535]' : 'bg-white'}`}>
+        <>
             <TitleCommon
             title='Users Management'
             handleSearch={handleSearch}
             onRenew={() => {
-                setSearchText("");
-                setCurrent(1);
-                setSortQuery("-created_at");
+                getUsers();
             }}
-            buttonAdd={false}
             />
 
             <TableCommon
@@ -192,7 +192,7 @@ const UserPage = () => {
                 sortQueryState={{  sortQuery, setSortQuery }}
                 handleDelete={handleDelete}
                 setIsModalOpen={setIsModalOpen}
-                setSelectedUser={setSelectedUser}
+                setSelectedData={setSelectedUser}
                 rowKey='user_id'
             />
 
@@ -205,7 +205,7 @@ const UserPage = () => {
                 user={selectedUser}
                 loadData={getUsers}
             />
-        </div>
+        </>
     );
 };
 

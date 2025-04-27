@@ -41,4 +41,8 @@ export const handleChangeUpload = (setState: React.Dispatch<React.SetStateAction
             ...item,
             url: item.originFileObj ? URL.createObjectURL(item.originFileObj) : item.url,
             status: 'done'
-        })));
+    })));
+
+export const numberWithCommas=(x: string | number)=> {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}

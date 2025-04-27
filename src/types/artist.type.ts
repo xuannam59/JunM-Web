@@ -1,11 +1,18 @@
 export interface IArtist{
     artist_id: string;
-    users? : string;
     artist_name: string;
-    avatar_url: string;
-    created_at: Date;
-    updated_at: Date;
-    songs?: unknown[];
-    albums?: unknown[];
-    videos?: unknown[]
+    avatar: string;
+    slug: string;
+    created_at?: Date;
+    updated_at?: Date;
+    follows: unknown[];
+    songs: unknown[];
+    albums: unknown[];
+    videos: unknown[]
+}
+
+export interface IArtistFrom {
+    artist_id: string;
+    artist_name: string;
+    avatar: string;
 }
