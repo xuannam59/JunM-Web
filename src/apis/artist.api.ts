@@ -1,16 +1,16 @@
 import { IBackendRes, IBackendResWithPagination } from "@/types/backend.type";
 import axios from "@/configs/axios-customize";
-import { IArtist, IArtistFrom } from "@/types/artist.type";
+import { IArtist, IArtistForm } from "@/types/artist.type";
 
 export const callGetArtists = (query: unknown) => {
     return axios.get<IBackendResWithPagination<IArtist>>(`api/v1/artists/all?${query}`);
 }
 
-export const callCreateArtist = (data: IArtistFrom) => {
+export const callCreateArtist = (data: IArtistForm) => {
     return axios.post<IBackendRes<IArtist>>(`api/v1/artists/create`, data);
 }
 
-export const callUpdateArtist= (data: IArtistFrom) => {
+export const callUpdateArtist= (data: IArtistForm) => {
     return axios.patch<IBackendRes<string>>(`api/v1/artists/update/${data.artist_id}`, data);
 }
 

@@ -35,31 +35,29 @@ const Header = () => {
         }
     ];
     return (
-        <>
-            <div className="flex items-center justify-end h-full gap-4">
-                {/* Theme Toggle */}
-                <Button
-                    type="text"
-                    onClick={toggleTheme}
-                    className={darkMode ? 'text-gray-300 hover:text-yellow-400' : ''}
-                >
-                    {darkMode ? <TbSun size={20} className="text-yellow-400" /> : <TbMoon size={20} />}
-                </Button>
+        <div className="flex items-center justify-end h-full gap-4">
+            {/* Theme Toggle */}
+            <Button
+                type="text"
+                onClick={toggleTheme}
+                className={darkMode ? 'text-gray-300 hover:text-yellow-400' : ''}
+            >
+                {darkMode ? <TbSun size={20} className="text-yellow-400" /> : <TbMoon size={20} />}
+            </Button>
 
-                {/* Avatar Dropdown */}
-                <Dropdown
-                    menu={{ items: dropdownItems, style: { backgroundColor: darkMode ? "#333333" : "#ffffff" } }}
-                    trigger={['click']}
-                    placement="bottomRight"
-                >
-                    <div className={`flex items-center gap-2 cursor-pointer ${darkMode ? 'text-gray-300' : ''}`}>
-                        <Avatar size={36} src={auth.user.avatar ? auth.user.avatar : "/images/avatar-user.webp"} />
-                        <span>Admin</span>
-                        <TbChevronDown size={16} />
-                    </div>
-                </Dropdown>
-            </div>
-        </>
+            {/* Avatar Dropdown */}
+            <Dropdown
+                menu={{ items: dropdownItems, style: { backgroundColor: darkMode ? "#333333" : "#ffffff" } }}
+                trigger={['click']}
+                placement="bottomRight"
+            >
+                <div className={`flex items-center gap-2 cursor-pointer ${darkMode ? 'text-gray-300' : ''}`}>
+                    <Avatar size={36} src={auth.user.avatar ? auth.user.avatar : "/images/avatar-user.webp"} />
+                    <span className="hidden md:inline">Admin</span>
+                    <TbChevronDown size={16} />
+                </div>
+            </Dropdown>
+        </div>
     )
 }
 

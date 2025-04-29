@@ -1,9 +1,9 @@
 import { useTheme } from '@/utils/ThemeProvider';
-import { Button, Dropdown, MenuProps, Table, TableProps, Modal, App } from 'antd'
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { App, Button, Dropdown, MenuProps, Table, TableProps } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { SorterResult } from 'antd/es/table/interface';
 import { TbDots, TbEdit, TbTrash } from 'react-icons/tb';
-import { ExclamationCircleFilled } from '@ant-design/icons';
 
 interface IProps {
   isLoading: boolean;
@@ -28,14 +28,12 @@ interface IProps {
   rowKey?: string;
 }
 
-
 const TableCommon = (props: IProps) => {
   const {darkMode} = useTheme();
   const {isLoading, columns,data,  currentState, pageSizeState, 
     totalItem, sortQueryState, rowKey,
     setSelectedData, setIsModalOpen, handleDelete} = props;
-const {modal} = App.useApp();
-  
+  const {modal} = App.useApp();
 
   const showDeleteConfirm = (record: any) => {
     modal.confirm({
@@ -98,6 +96,7 @@ const {modal} = App.useApp();
     key: 'action',
     align: "center",
     fixed: "right",
+    width: 80,
     render: (record: any) => (
         <Dropdown
             menu={{
@@ -111,28 +110,26 @@ const {modal} = App.useApp();
   }]
 
   return (
-    <>
-    <div className='mx-2'>
+    <div className="w-full overflow-x-auto">
       <Table
-                loading={isLoading}
-                columns={[...columns, ...actionColumn]}
-                dataSource={data}
-                pagination={{
-                    current: currentState.current,
-                    total: totalItem,
-                    pageSize: pageSizeState.pageSize,
-                    showSizeChanger: true,
-                }}
-                onChange={onChangePagination}
-                rowClassName={darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
-                scroll={{
-                    x: "max-content",
-                }}
-                rowKey={rowKey}
-            />
+        loading={isLoading}
+        columns={[...columns, ...actionColumn]}
+        dataSource={data}
+        pagination={{
+            current: currentState.current,
+            total: totalItem,
+            pageSize: pageSizeState.pageSize,
+            showSizeChanger: true,
+        }}
+        onChange={onChangePagination}
+        rowClassName={() => darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
+        scroll={{
+            x: "max-content",
+            y: 57*10
+        }}
+        rowKey={rowKey}
+      />
     </div>
-
-    </>
   )
 }
 

@@ -43,6 +43,7 @@ const UserPage = () => {
     const columns: ColumnsType<IUser> = [
         {
             key: "index",
+            fixed: "left",
             render: (_,_1, index) => {
                 return (current - 1)*pageSize + index + 1
             }
@@ -51,6 +52,8 @@ const UserPage = () => {
             title: 'Avatar',
             dataIndex: 'avatar',
             key: 'avatar',
+            fixed: "left",
+            width: 80,
             render: (avatar: string) => (
                 <Avatar src={avatar ?? "/images/avatar-user.webp"} size={40} alt="avatar" />
             ),
@@ -175,11 +178,11 @@ const UserPage = () => {
     return (
         <>
             <TitleCommon
-            title='Users Management'
-            handleSearch={handleSearch}
-            onRenew={() => {
-                getUsers();
-            }}
+                title='Users Management'
+                handleSearch={handleSearch}
+                onRenew={() => {
+                    getUsers();
+                }}
             />
 
             <TableCommon

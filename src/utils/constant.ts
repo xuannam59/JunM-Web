@@ -46,3 +46,7 @@ export const handleChangeUpload = (setState: React.Dispatch<React.SetStateAction
 export const numberWithCommas=(x: string | number)=> {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
+
+export const capitalizeVietnamese = (text: string) => {
+    return text.toLowerCase().replace(/(^|\s)\w/g, char => char.toUpperCase());
+}

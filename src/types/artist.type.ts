@@ -1,3 +1,9 @@
+export interface IFollow {
+    artist_id: string;
+    user_id: string;
+    follow_at: Date;
+}
+
 export interface IArtist{
     artist_id: string;
     artist_name: string;
@@ -11,7 +17,7 @@ export interface IArtist{
     videos: unknown[]
 }
 
-export interface IArtistFrom {
+export interface IArtistForm {
     artist_id: string;
     artist_name: string;
     avatar: string;

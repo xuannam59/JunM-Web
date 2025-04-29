@@ -1,4 +1,4 @@
-import { IArtist, IArtistFrom } from '@/types/artist.type';
+import { IArtist, IArtistForm } from '@/types/artist.type';
 import { useTheme } from '@/utils/ThemeProvider';
 import { App, Form, Input, Modal, Upload } from 'antd';
 import { useEffect, useState } from 'react';
@@ -36,10 +36,10 @@ const ArtistModal = ({ isOpen, onClose, artist, loadData }: IProps) => {
         }
     }, [artist]);
 
-    const handleSubmit = async (values: IArtistFrom) => {
+    const handleSubmit = async (values: IArtistForm) => {
         setIsLoading(true);
         console.log(values);
-        const data: IArtistFrom = {
+        const data: IArtistForm = {
             artist_id: values.artist_id,
             artist_name: values.artist_name.trim(),
             avatar: ""
