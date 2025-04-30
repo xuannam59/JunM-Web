@@ -1,16 +1,17 @@
 import { useTheme } from '@/utils/ThemeProvider';
 import { Button, Input, Tooltip } from 'antd';
-import { TbPlus, TbReload, TbSearch } from 'react-icons/tb';
+import { TbFilter, TbPlus, TbReload, TbSearch } from 'react-icons/tb';
 
 interface IProps {
     title: string;
     handleSearch: (value: string) => void;
     onRenew: () => void;
     onAdd?: (value: boolean) => void;
+    onFilter?: (value: boolean) => void;
 }
 
 const TitleCommon = (props: IProps) => {
-    const { title, handleSearch, onRenew, onAdd } = props;
+    const { title, handleSearch, onRenew, onAdd, onFilter } = props;
     const { darkMode } = useTheme();
 
     return (
@@ -24,6 +25,16 @@ const TitleCommon = (props: IProps) => {
                     onChange={(e) => handleSearch(e.target.value)}
                     className={`w-80 ${darkMode ? '!bg-[#353535] !border-gray-600 !text-white' : ''}`}
                 />
+                {onFilter && (
+                    <Tooltip title="Filter">
+                        <Button
+                            className={`!p-2 ${darkMode ? '!bg-[#353535]' : ''}`}
+                            onClick={() => onFilter(true)}
+                        >
+                            <TbFilter size={20} />
+                        </Button>
+                    </Tooltip>
+                )}
                 <Tooltip title="Renew">
                     <Button
                         className={`!p-2 ${darkMode ? '!bg-[#353535]' : ''}`}

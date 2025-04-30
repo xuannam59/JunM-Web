@@ -48,5 +48,9 @@ export const numberWithCommas=(x: string | number)=> {
 }
 
 export const capitalizeVietnamese = (text: string) => {
-    return text.toLowerCase().replace(/(^|\s)\w/g, char => char.toUpperCase());
+    return text
+        .toLowerCase()
+        .replace(/(^|\s)([a-zăâđêôơưáàảãạéèẻẽẹíìỉĩịóòỏõọúùủũụýỳỷỹỵ])/g, (match, p1, p2) => {
+            return p1 + (p2 === 'đ' ? 'Đ' : p2.toUpperCase());
+        });
 }

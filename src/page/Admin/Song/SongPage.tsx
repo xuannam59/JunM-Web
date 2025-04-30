@@ -2,46 +2,131 @@ import { callDeleteSong, callGetSongs } from "@/apis/song.api";
 import TableCommon from "@/components/common/TableCommon";
 import TitleCommon from "@/components/common/TitleCommon";
 import SongModal from "@/components/modals/SongModal";
-import { ISong } from "@/types/song.type";
+import { ISong, ISongFilter } from "@/types/song.type";
 import { numberWithCommas, replaceSlug } from "@/utils/constant";
 import { App, Avatar, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import SongFilter from "@/components/filters/SongFilter";
+import { callGetArtists } from "@/apis/artist.api";
+import { BaseOptionType } from "antd/es/select";
 
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_SORT = "-created_at";
+const DEFAULT_FILTER: ISongFilter = {
+  artist_id: "",
+  genre: ""
+};
 
 const SongPage = () => {
-  let timeoutId: ReturnType<typeof setTimeout>;
-
+  const { message, notification } = App.useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [totalItem, setTotalItem] = useState(0);
   const [data, setData] = useState<ISong[]>([]);
   const [selectedData, setSelectedData] = useState<ISong | null>(null);
-  const [sortQuery, setSortQuery] = useState("-release_date");
-  const [searchText, setSearchText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [sortQuery, setSortQuery] = useState<string>(DEFAULT_SORT);
+  const [searchText, setSearchText] = useState<string>();
+  const [filters, setFilters] = useState<ISongFilter>(DEFAULT_FILTER);
+  const [artistsSelect, setArtistsSelect] = useState<BaseOptionType[]>([]);
 
-  const { message, notification } = App.useApp();
+  const getSongs = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const queryParams = new URLSearchParams({
+        current: current.toString(),
+        pageSize: pageSize.toString(),
+        sort: sortQuery
+      });
+
+      if (searchText) {
+        queryParams.append('search', replaceSlug(searchText));
+      }
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+          queryParams.append(key, value);
+        }
+      });
+
+      const res = await callGetSongs(queryParams.toString());
+      if (res.data) {
+        setData(res.data.result);
+        setTotalItem(res.data.meta.totalItems);
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error fetching songs",
+        description: "Failed to load songs data"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [current, pageSize, sortQuery, searchText, filters, notification]);
+
+  const getArtists = useCallback(async () => {
+    try {
+      const res = await callGetArtists("current=1&pageSize=1000");
+      if (res.data) {
+        const options = res.data.result.map(item => ({
+          label: item.artist_name,
+          value: item.artist_id
+        }));
+        setArtistsSelect(options);
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error fetching artists",
+        description: "Failed to load artists data"
+      });
+    }
+  }, [notification]);
 
   useEffect(() => {
-    getSongs()
-  }, [current, pageSize, sortQuery, searchText]);
+    getSongs();
+  }, [getSongs]);
 
-  const getSongs = async () => {
+  useEffect(() => {
+    getArtists();
+  }, [getArtists]);
+
+  const handleDelete = async (record: ISong) => {
     setIsLoading(true);
-    let query = `current=${current}&pageSize=${pageSize}&sort=${sortQuery}`;
-    if (searchText) {
-      query += `&search=${replaceSlug(searchText)}`;
+    try {
+      const res = await callDeleteSong(record.song_id);
+      if (res.data) {
+        message.success(res.data);
+        getSongs();
+      }
+    } catch (error) {
+      notification.error({
+        message: "Delete error",
+        description: "Failed to delete song"
+      });
+    } finally {
+      setIsLoading(false);
     }
-    const res = await callGetSongs(query);
-    if (res.data) {
-      setData(res.data.result);
-      setTotalItem(res.data.meta.totalItems);
+  };
+
+  const handleSearch = (value: string) => {
+    if (value.length > 3) {
+      setSearchText(value);
+      setCurrent(1);
+    } else {
+      setSearchText("");
     }
-    setIsLoading(false);
-  }
+  };
+
+  const handleReset = () => {
+    setSortQuery(DEFAULT_SORT);
+    setSearchText(undefined);
+    setFilters(DEFAULT_FILTER);
+    setCurrent(1);
+  };
 
   const columns: ColumnsType<ISong> = [
     {
@@ -74,7 +159,7 @@ const SongPage = () => {
     },
     {
       key: 'artist',
-      title: 'Artist',
+      title: `Artist (${data.length})`,
       dataIndex: 'artist',
       align: "center",
       width: 150,
@@ -118,15 +203,15 @@ const SongPage = () => {
       }
     },
     {
-      key: 'views',
-      title: 'Views',
-      dataIndex: 'views',
+      key: 'listens',
+      title: 'Listens',
+      dataIndex: 'listens',
       align: "center",
       width: 100,
       sorter: true,
-      render: (views: number) => (
-        <Tag color={views > 0 ? "green" : "default"}>
-          {numberWithCommas(views)}
+      render: (listens: number) => (
+        <Tag color={listens > 0 ? "green" : "default"}>
+          {numberWithCommas(listens)}
         </Tag>
       )
     },
@@ -162,51 +247,22 @@ const SongPage = () => {
     },
   ];
 
-  const handleDelete = async (record: ISong) => {
-    setIsLoading(true);
-    const res = await callDeleteSong(record.song_id);
-    if (res.data) {
-      message.success(res.data);
-      getSongs();
-    } else {
-      notification.error({
-        message: "Delete error",
-        description: res.message
-      })
-    }
-    setIsLoading(false);
-  }
-
-  const handleSearch = (value: string) => {
-    if(value.length > 3) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setSearchText(value);
-        setCurrent(1);
-      }, 1000);
-    }else {
-      setSearchText("");
-      clearTimeout(timeoutId);
-    }
-  }
-
   return (
     <>
       <TitleCommon
         title="Song Management"
         handleSearch={handleSearch}
-        onRenew={() => {
-          getSongs();
-        }}
-        onAdd={setIsModalOpen}
+        onRenew={handleReset}
+        onAdd={() => setIsModalOpen(true)}
+        onFilter={() => setIsFilterOpen(true)}
       />
 
       <TableCommon
         isLoading={isLoading}
         columns={columns}
         data={data}
-        currentState={{ current, setCurrent }}  
-        pageSizeState={{ pageSize, setPageSize }} 
+        currentState={{ current, setCurrent }}
+        pageSizeState={{ pageSize, setPageSize }}
         totalItem={totalItem}
         sortQueryState={{ sortQuery, setSortQuery }}
         handleDelete={handleDelete}
@@ -223,9 +279,20 @@ const SongPage = () => {
         }}
         song={selectedData}
         loadData={getSongs}
+        artistsSelect={artistsSelect}
+      />
+
+      <SongFilter
+        isFilterOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        onApply={(values) => {
+          setFilters(values);
+          setIsFilterOpen(false);
+        }}
+        artistsSelect={artistsSelect}
       />
     </>
-  )
-}
+  );
+};
 
-export default SongPage
+export default SongPage;

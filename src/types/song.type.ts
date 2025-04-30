@@ -14,7 +14,7 @@ export interface ISong{
     title: string;
     thumbnail_url: string;
     file_url: string;
-    views: number;
+    listens: number;
     durations: number;
     lyrics: string;
     genre: string;
@@ -41,4 +41,9 @@ export interface ISongForm {
     album_id: string | null;
     lyrics: string;
     release_date:Date;
+}
+
+export interface ISongFilter {
+    artist_id: string;
+    genre: string;
 }
