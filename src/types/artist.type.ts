@@ -13,7 +13,6 @@ export interface IArtist{
     updated_at?: Date;
     follows: unknown[];
     songs: unknown[];
-    albums: unknown[];
     videos: unknown[]
 }
 

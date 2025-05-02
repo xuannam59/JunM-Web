@@ -40,7 +40,6 @@ const SongModal = ({ isOpen, onClose, song, loadData, artistsSelect }: IProps) =
                 genre: song.genre,
                 release_date: dayjs(song.release_date),
                 artist_id: song.artist_id,
-                album_id: song.album_id || "",
                 durations: song.durations,
                 lyrics: song.lyrics,
             };
@@ -75,7 +74,6 @@ const SongModal = ({ isOpen, onClose, song, loadData, artistsSelect }: IProps) =
                 genre: values.genre,
                 release_date: dayjs(values.release_date).format('YYYY-MM-DD') as unknown as Date,
                 artist_id: values.artist_id,
-                album_id: values.album_id || null,
                 lyrics: values.lyrics,
                 durations: values.durations,
                 thumbnail_url: "",
@@ -263,20 +261,6 @@ const SongModal = ({ isOpen, onClose, song, loadData, artistsSelect }: IProps) =
                     >
                         <Select
                             options={artistsSelect}
-                            className={darkMode ? 'dark-select' : ''}
-                            showSearch
-                            filterOption={(input, option) =>
-                                (replaceSlug(option?.label as string) ?? '').includes(
-                                    replaceSlug(input)
-                                )}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Album"
-                        name="album_id"
-                    >
-                        <Select
                             className={darkMode ? 'dark-select' : ''}
                             showSearch
                             filterOption={(input, option) =>

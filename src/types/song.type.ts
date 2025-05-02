@@ -1,4 +1,3 @@
-import { IAlbum } from "./album.type";
 import { IArtist } from "./artist.type";
 import { IPlaylistSong } from "./playlist.type";
 import { IListeningHistory } from "./user.type";
@@ -21,8 +20,6 @@ export interface ISong{
     release_date: Date;
     artist_id: string;
     artist: IArtist;
-    album_id: string | null;
-    album: IAlbum | null;
     created_at?: Date;
     updated_at?: Date;
     likes: ILike[];
@@ -38,7 +35,6 @@ export interface ISongForm {
     durations: number;
     genre: string;
     artist_id: string;
-    album_id: string | null;
     lyrics: string;
     release_date:Date;
 }

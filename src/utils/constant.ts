@@ -13,7 +13,6 @@ export const routes = {
     ADMIN_ARTIST: "artists",
     ADMIN_SONG: "songs",
     ADMIN_VIDEO: "videos",
-    ADMIN_ALBUM: "albums",
     ADMIN_PLAYLIST: "playlists",
     ADMIN_SETTING: "settings",
 

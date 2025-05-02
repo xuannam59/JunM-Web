@@ -18,6 +18,8 @@ const DEFAULT_FILTER: ISongFilter = {
   artist_id: "",
   genre: ""
 };
+let timeoutId: ReturnType<typeof setTimeout>;
+
 
 const SongPage = () => {
   const { message, notification } = App.useApp();
@@ -113,13 +115,18 @@ const SongPage = () => {
   };
 
   const handleSearch = (value: string) => {
-    if (value.length > 3) {
-      setSearchText(value);
-      setCurrent(1);
-    } else {
-      setSearchText("");
+    if(value.length > 3) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            setSearchText(value);
+            setCurrent(1);
+        }, 1000);
+    }else {
+        setSearchText("");
+        clearTimeout(timeoutId);
     }
-  };
+
+}
 
   const handleReset = () => {
     setSortQuery(DEFAULT_SORT);
@@ -166,18 +173,6 @@ const SongPage = () => {
       render: (artist: ISong['artist']) => {
         if (typeof artist === 'string') return artist;
         return artist.artist_name;
-      }
-    },
-    {
-      key: 'album',
-      title: 'Album',
-      dataIndex: 'album',
-      align: "center",
-      width: 150,
-      render: (album: ISong['album']) => {
-        if (!album) return '--';
-        if (typeof album === 'string') return album;
-        return album.title;
       }
     },
     {

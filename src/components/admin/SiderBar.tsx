@@ -1,7 +1,7 @@
 import { routes } from '@/utils/constant';
 import { useTheme } from '@/utils/ThemeProvider';
 import { Image, Menu, Tooltip } from 'antd'
-import { TbAlbum, TbLayoutDashboard, TbMicrophone2, TbMusic, TbPlaylist, TbSettings, TbUser, TbVideo } from 'react-icons/tb';
+import { TbLayoutDashboard, TbMicrophone2, TbMusic, TbPlaylist, TbSettings, TbUser, TbVideo } from 'react-icons/tb';
 import { Link, useLocation } from 'react-router-dom';
 
 interface IProps {
@@ -36,11 +36,6 @@ const SiderBar = ({ isCollapsed }: IProps) => {
             key: `/${routes.ADMIN}/${routes.ADMIN_VIDEO}`,
             icon: <TbVideo size={20} />,
             label: <Link to={routes.ADMIN_VIDEO}>Videos</Link>,
-        },
-        {
-            key: `/${routes.ADMIN}/${routes.ADMIN_ALBUM}`,
-            icon: <TbAlbum size={20} />,
-            label: <Link to={routes.ADMIN_ALBUM}>Albums</Link>,
         },
         {
             key: `/${routes.ADMIN}/${routes.ADMIN_PLAYLIST}`,

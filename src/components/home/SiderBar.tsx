@@ -33,11 +33,6 @@ const SiderBar = () => {
                     label: 'Discover',
                 },
                 {
-                    key: '/albums',
-                    icon: <CustomerServiceOutlined />,
-                    label: 'Albums',
-                },
-                {
                     key: '/artists',
                     icon: <CustomerServiceOutlined />,
                     label: 'Artists',

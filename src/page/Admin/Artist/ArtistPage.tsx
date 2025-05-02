@@ -84,19 +84,6 @@ const getArtist = async () => {
         }
     },
     {
-        key: "albums",
-        title: "Albums",
-        dataIndex: "albums",
-        align: "center",
-       render: (albums: IArtist["albums"]) => {
-            return <>
-            <Tag color={albums.length > 0 ? "green" : ""}>
-                {numberWithCommas(albums.length)}
-            </Tag>
-            </>
-        }
-    },
-    {
         key: "songs",
         title: "Songs",
         dataIndex: "songs",
