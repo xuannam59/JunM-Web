@@ -72,6 +72,7 @@ const SongPage = () => {
 
   const getArtists = useCallback(async () => {
     try {
+      setIsLoading(true);
       const res = await callGetArtists("current=1&pageSize=1000");
       if (res.data) {
         const options = res.data.result.map(item => ({
@@ -85,6 +86,8 @@ const SongPage = () => {
         message: "Error fetching artists",
         description: "Failed to load artists data"
       });
+    } finally {
+      setIsLoading(false);
     }
   }, [notification]);
 

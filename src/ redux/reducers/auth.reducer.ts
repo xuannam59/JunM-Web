@@ -7,19 +7,22 @@ interface IAuthState {
     user: IUser
 }
 
+const DEFAULT_USER = {
+    user_id: "",
+    email: "",
+    username: "",
+    full_name: "",
+    role: "",
+    avatar: "",
+    number_phone: "",
+    google_id: "",
+    listeningHistories: []
+}
+
 const initialState: IAuthState = {
     isLoading: false,
     isAuthenticated: false,
-    user: {
-        user_id: "",
-        email: "",
-        username: "",
-        full_name: "",
-        role: "",
-        avatar: "",
-        number_phone: "",
-        google_id: ""
-    }
+    user: DEFAULT_USER
 }
 
 const authSlice = createSlice({
@@ -38,16 +41,8 @@ const authSlice = createSlice({
         },
         doLogout: (state) => {
             state.isAuthenticated = false;
-            state.user = {
-                user_id: "",
-                email: "",
-                username: "",
-                full_name: "",
-                role: "",
-                avatar: "",
-                number_phone: "",
-                google_id: ""
-            };
+            state.user = DEFAULT_USER;
+            window.localStorage.removeItem("access_token");
         }
     }
 });

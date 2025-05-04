@@ -5,8 +5,8 @@ import { TbLock, TbMail, TbUser } from 'react-icons/tb'
 import { IRegisterForm } from '@/types/auth.type'
 import { useState } from 'react'
 import ButtonGoogleLogin from '@/components/auth/ButtonLoginGoogle'
-import { callRegister } from '@/apis/login.api'
 import { routes } from '@/utils/constant'
+import { callRegister } from '@/apis/auth.api'
 
 const { Title } = Typography
 

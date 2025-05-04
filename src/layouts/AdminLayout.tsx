@@ -1,14 +1,23 @@
 import Header from '@/components/admin/Header'
 import SiderBar from '@/components/admin/SiderBar'
 import { useTheme } from '@/utils/ThemeProvider'
-import { Outlet } from 'react-router-dom'
-import { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb';
+import { useAppSelector } from '@/ redux/hook';
 
 const AdminLayout = () => {
   const { darkMode } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const auth = useAppSelector(state => state.auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(auth.isAuthenticated && auth.user.role !=="ADMIN") {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className={`min-h-screen w-full max-w-[2560px] flex ${darkMode ? 'bg-[#121212]' : ''}`}>

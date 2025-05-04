@@ -15,5 +15,5 @@ export const callGetAccount = async () => {
 }
 
 export const callLogout = async () => {
-    return axios.get<IBackendRes<string>>("api/v1/auths/logout");
+    return axios.post<IBackendRes<string>>("api/v1/auths/logout");
 }

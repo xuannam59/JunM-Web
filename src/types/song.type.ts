@@ -5,7 +5,7 @@ import { IListeningHistory } from "./user.type";
 export interface ILike {
     user_id: string;
     song_id: string;
-    liked_at: Date;
+    liked_at?: Date;
 }
 
 export interface ISong{

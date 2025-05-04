@@ -2,7 +2,7 @@ import TableCommon from "@/components/common/TableCommon";
 import TitleCommon from "@/components/common/TitleCommon";
 import { IPlayList } from "@/types/playlist.type";
 import { numberWithCommas, replaceSlug } from "@/utils/constant";
-import { App, Avatar, Button, Switch, Tag } from "antd";
+import { App, Avatar, Switch, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";

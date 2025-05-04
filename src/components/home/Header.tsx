@@ -1,30 +1,51 @@
-import { useAppSelector } from '@/ redux/hook';
+import { useAppDispatch, useAppSelector } from '@/ redux/hook';
+import { doLogout } from '@/ redux/reducers/auth.reducer';
+import { callLogout } from '@/apis/auth.api';
 import { routes } from '@/utils/constant';
 import { useTheme } from '@/utils/ThemeProvider';
-import { Avatar, Button, Dropdown, Input, MenuProps, Tooltip } from 'antd';
+import { App, Avatar, Button, Dropdown, Input, MenuProps, Tooltip } from 'antd';
 import React from 'react';
 import { TbArrowLeft, TbArrowRight, TbLayoutDashboard, TbLogout, TbMoon, TbSearch, TbSettings, TbSun } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
-
+    const {message, notification} = App.useApp();
     const auth = useAppSelector(state => state.auth);
     const { darkMode, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
+    const dispatch = useAppDispatch();
+
     const items: MenuProps['items'] = [
-        {
-            key: "dashboard",
-            label: <Link to={routes.ADMIN}>Dashboard</Link>,
-            icon: <TbLayoutDashboard size={24} />
-        },
+        
+        ...(auth.user.role === "ADMIN" ? 
+            [{
+                key: "dashboard",
+                label: <Link to={routes.ADMIN}>Dashboard</Link>,
+                icon: <TbLayoutDashboard size={24} />
+            }] :
+        []),
         {
             key: 'logout',
             label: 'Logout',
             icon: <TbLogout size={24} />,
+            onClick: () => handleLogout()
         },
 
     ];
+
+    const handleLogout = async () => {
+        const res = await callLogout();
+        if(res.data) {
+            message.success(res.data);
+            dispatch(doLogout());
+        }else {
+            notification.error({
+                message: "Logout error",
+                description:res.message
+            })
+        }
+    }
 
     return (
         <>
@@ -53,10 +74,9 @@ const Header: React.FC = () => {
                         >
                             <TbSettings size={22} color={darkMode ? '#C2C2C2' : "#42484E"} />
                         </div>
-                    </Tooltip>
-
-                    {/* <Button type='primary' onClick={() => navigate("/login")}>Đăng nhập</Button>
-                    <Button color="primary" variant="outlined" onClick={() => navigate("/register")}>Đăng ký</Button> */}
+                    </Tooltip>  
+                   
+                    {auth.isAuthenticated ?  
                     <Dropdown
                         menu={{ items, style: { backgroundColor: darkMode ? "#333333" : "#ffffff" } }}
                         placement="bottomRight"
@@ -64,7 +84,13 @@ const Header: React.FC = () => {
                         className='cursor-pointer'
                     >
                         <Avatar src={auth.user.avatar ? auth.user.avatar : "/images/avatar-user.webp"} size={40} />
-                    </Dropdown>
+                    </Dropdown> 
+                    : 
+                    <div className="flex gap-2">
+                        <Button type='primary' onClick={() => navigate("/login")}>Đăng nhập</Button>
+                        <Button color="primary" variant="outlined" onClick={() => navigate("/register")}>Đăng ký</Button>
+                    </div>
+                    }
                 </div>
             </div>
         </>

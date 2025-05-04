@@ -1,95 +1,32 @@
+import { routes } from '@/utils/constant'
 import { useTheme } from '@/utils/ThemeProvider'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Image, Menu } from 'antd'
 import type { MenuProps } from 'antd'
-import {
-    HomeOutlined,
-    CompassOutlined,
-    CustomerServiceOutlined,
-    ClockCircleOutlined,
-    PlaySquareOutlined,
-    HeartOutlined,
-    UnorderedListOutlined,
-    PlusCircleOutlined
-} from '@ant-design/icons'
+import { Image, Menu } from 'antd'
+import { TbHistory, TbHome, TbPlaylist } from 'react-icons/tb'
+import { Link, useLocation } from 'react-router-dom'
+
 
 const SiderBar = () => {
     const { darkMode } = useTheme()
-    const navigate = useNavigate()
     const location = useLocation()
 
     const menuItems: MenuProps['items'] = [
         {
-            type: 'group',
-            children: [
-                {
-                    key: '/',
-                    icon: <HomeOutlined />,
-                    label: 'Home',
-                },
-                {
-                    key: '/discover',
-                    icon: <CompassOutlined />,
-                    label: 'Discover',
-                },
-                {
-                    key: '/artists',
-                    icon: <CustomerServiceOutlined />,
-                    label: 'Artists',
-                },
-            ],
+            key: `${routes.DEFAULT}`,
+            icon: <TbHome size={20}/>,
+            label: <Link to={routes.DEFAULT}>Home</Link>
         },
         {
-            type: 'group',
-            children: [
-                {
-                    key: '/recently',
-                    icon: <ClockCircleOutlined />,
-                    label: 'Recently Added',
-                },
-                {
-                    key: '/most-played',
-                    icon: <PlaySquareOutlined />,
-                    label: 'Most played',
-                },
-            ],
+            key: '/playlists',
+            icon: <TbPlaylist size={20}/>,
+            label: <Link to="/playlists">Playlists</Link>
         },
         {
-            type: 'group',
-            children: [
-                {
-                    key: '/favorites',
-                    icon: <HeartOutlined />,
-                    label: 'Your favorites',
-                },
-                {
-                    key: '/playlist',
-                    icon: <UnorderedListOutlined />,
-                    label: 'Your playlist',
-                },
-                {
-                    key: 'add-playlist',
-                    icon: <PlusCircleOutlined />,
-                    label: 'Add playlist',
-                    className: 'text-[#2E9CFF] hover:text-[#2E9CFF]',
-                },
-            ],
+            key: '/history',
+            icon: <TbHistory size={20}/>,
+            label: <Link to="/history">History</Link>
         }
     ]
-
-    const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
-        if (key === 'logout') {
-            // Xử lý logout
-            console.log('Logout clicked')
-            return
-        }
-        if (key === 'add-playlist') {
-            // Xử lý thêm playlist
-            console.log('Add playlist clicked')
-            return
-        }
-        navigate(key)
-    }
 
     return (
         <>
@@ -104,7 +41,6 @@ const SiderBar = () => {
                     mode="inline"
                     selectedKeys={[location.pathname]}
                     items={menuItems}
-                    onClick={handleMenuClick}
                     className={`border-0 ${darkMode ? '!bg-[#292929]' : '!bg-[#F9F9F9]'} !border-none`}
                     style={{
                         fontSize: '14px',

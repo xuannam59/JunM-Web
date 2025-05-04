@@ -1,9 +1,8 @@
-import { callGetAccount } from "./apis/login.api";
 import Routers from "./routers/Router"
 import { useEffect } from "react";
-import { routes } from "./utils/constant";
 import { useAppDispatch } from "./ redux/hook";
 import { doGetAccount } from "./ redux/reducers/auth.reducer";
+import { callGetAccount } from "./apis/auth.api";
 
 
 function App() {
