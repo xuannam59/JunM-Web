@@ -1,4 +1,4 @@
-import { IUser } from '@/types/user.type';
+import { IUser, IUserForm } from '@/types/user.type';
 import { App, Form, Input, Modal, Select, Switch, Upload } from 'antd';
 import { useTheme } from '@/utils/ThemeProvider';
 import { useEffect, useState } from 'react';
@@ -40,9 +40,9 @@ const UserModal = ({ isOpen, onClose, user, loadData }: IProps) => {
         }
     }, [user]);
 
-    const handleSubmit = async (values: IUser) => {
+    const handleSubmit = async (values: IUserForm) => {
         setIsLoading(true);
-        const data: IUser = {
+        const data: IUserForm = {
             user_id: values.user_id,
             username: values.username,
             full_name: values.full_name,

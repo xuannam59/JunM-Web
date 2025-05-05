@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { ISong } from "@/types/song.type";
+import { DEFAULT_SONG, ISong } from "@/types/song.type";
 
 interface ISongState {
     isPlaying: boolean;
-    currentSong: ISong | null;
+    currentSong: ISong ;
     playlist: ISong[];
     history: ISong[];
 }
 
 const initialState: ISongState = {
     isPlaying: false,
-    currentSong: null,
+    currentSong: DEFAULT_SONG,
     playlist: [],
     history: [],
 }
@@ -24,6 +24,7 @@ const songSlice = createSlice({
             state.isPlaying = true;
             if (action.payload.playlist) {
                 state.playlist = action.payload.playlist;
+                window.localStorage.setItem("playlist", state.playlist.toString());
             }
             window.localStorage.setItem("song_id", state.currentSong.song_id);
             window.localStorage.setItem("song_time", "0");
@@ -33,6 +34,14 @@ const songSlice = createSlice({
             if (action.payload.playlist) {
                 state.playlist = action.payload.playlist;
             }
+        },
+        doNextSong: (state, action) => {
+            state.history = [];
+            state.playlist = [];
+        },
+        doBackSong: (state, action) => {
+            state.history = [];
+            state.playlist = [];
         },
         doSetIsPlaying: (state) => {
             state.isPlaying = !state.isPlaying;
@@ -47,4 +56,7 @@ const songSlice = createSlice({
 });
 
 export const songReducer = songSlice.reducer;
-export const { doPlaySong, doSetPlaylist, doGetSongByLocalStorage,  doSetIsPlaying} = songSlice.actions;
+export const { 
+    doPlaySong, doSetPlaylist, doGetSongByLocalStorage, 
+    doSetIsPlaying, doNextSong, doBackSong
+    } = songSlice.actions;

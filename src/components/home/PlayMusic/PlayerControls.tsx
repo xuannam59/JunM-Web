@@ -1,47 +1,59 @@
-import { formatTime } from '@/utils/song.constant';
-import { useTheme } from '@/utils/ThemeProvider';
-import { Button, Slider } from 'antd';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { doSetIsPlaying } from '@/redux/reducers/song.reducer';
+import { Button } from 'antd';
+import { useEffect, useState } from 'react';
 import {
-  TbArrowsShuffle,
-  TbPlayerPauseFilled,
-  TbPlayerPlayFilled,
-  TbPlayerSkipBack,
-  TbPlayerSkipForward,
-  TbRepeat
+    TbArrowsShuffle,
+    TbPlayerPauseFilled,
+    TbPlayerPlayFilled,
+    TbPlayerSkipBack,
+    TbPlayerSkipForward,
+    TbRepeat,
+    TbRepeatOnce
 } from 'react-icons/tb';
+import ProcessBar from './ProcessBar';
 
 interface PlayerControlsProps {
+    audio: HTMLAudioElement | null;
     isPlaying: boolean;
-    audioDuration: number;
-    seekingTime: number | null;
-    currentTime: number;
-    onPlayPause: () => void;
-    onSliderChange: (value: number) => void;
-    onSliderChangeComplete: (value: number) => void;
 }
 
 const PlayerControls: React.FC<PlayerControlsProps> = (props) => {
     const {
-        isPlaying, audioDuration, seekingTime, currentTime, 
-        onPlayPause, onSliderChange, onSliderChangeComplete
-    } = props
+        isPlaying, audio
+    } = props;
+    const [isShuffle, setIsShuffle] = useState(false);
+    const [isRepeat, setIsRepeat] = useState(false);
 
-    const { darkMode } = useTheme();
-    const track = {
-        background: darkMode ? "#ffffff" : "#1890ff"
+    const dispatch = useAppDispatch();
+    const song = useAppSelector(state => state.song);
+
+    const handlePlayPause = () => {
+        dispatch(doSetIsPlaying());
     };
     
     return ( <>
-        <div className="flex items-center gap-4">
-            <Button type='text'><TbArrowsShuffle size={22} /></Button>
-            <Button type='text'><TbPlayerSkipBack size={22} /></Button>
+        <div className="flex items-center gap-2">
+            <Button type='text' 
+                className={`${isShuffle && "!text-[#0E9EEF]"}`} 
+                onClick={() => setIsShuffle(!isShuffle)}
+            >
+                <TbArrowsShuffle size={22} />
+            </Button>
+            <Button 
+                type='text'
+                onClick={() => 1}
+                disabled={song.history.length === 0}
+            >
+                <TbPlayerSkipBack size={22} />
+            </Button>
             <Button
                 size='large'
                 color="default"
                 variant="outlined"
                 type='text'
                 shape='circle'
-                onClick={onPlayPause}
+                onClick={handlePlayPause}
             >
                 {isPlaying ? (
                 <TbPlayerPauseFilled size={24}/>
@@ -49,29 +61,30 @@ const PlayerControls: React.FC<PlayerControlsProps> = (props) => {
                 <TbPlayerPlayFilled size={24}/>
                 )}
             </Button>
-            <Button type='text'><TbPlayerSkipForward size={22} /></Button>
-            <Button type='text'><TbRepeat size={22} /></Button>
+            <Button 
+                type='text'                
+                onClick={() => 1}
+                disabled={song.playlist.length === 0}
+            >
+                <TbPlayerSkipForward size={22} />
+            </Button>
+            <Button 
+                className={`${isRepeat && "!text-[#EE10B0]"}`}
+                onClick={() => setIsRepeat(!isRepeat)}
+                type='text'
+            >   
+            {isRepeat ? 
+                <TbRepeatOnce size={22}/> 
+                :
+                <TbRepeat size={22} />
+            }
+            </Button>
         </div>
-        <div className="w-full mt-1 h-fit">
-            <div className="flex justify-center items-center">
-                <div className="w-fit text-sm">{formatTime(seekingTime !== null ? seekingTime : currentTime)}</div>
-                <div className="w-full mx-3">
-                <Slider
-                    className='custom-slider !m-0'
-                    tooltip={{ formatter: null }}
-                    styles={{
-                    track: track,
-                    }}
-                    min={0}
-                    max={audioDuration}
-                    value={seekingTime !== null ? seekingTime : currentTime}
-                    onChange={onSliderChange}
-                    onChangeComplete={onSliderChangeComplete}
-                />
-                </div>
-                <div className="w-fit text-sm">{formatTime(audioDuration)}</div>
-            </div>
-        </div>
+        <ProcessBar
+            audio={audio}
+            handlePlayPause={handlePlayPause}
+            isRepeat={isRepeat}
+        />
     </>
   );
 };

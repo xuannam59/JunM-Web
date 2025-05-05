@@ -36,6 +36,17 @@ export interface IUser {
     deleted_at?: Date;
 }
 
+export interface IUserForm {
+    user_id: string;
+    username: string;
+    full_name: string;
+    email: string;
+    number_phone: string;
+    role: string;
+    is_blocked: boolean;
+    avatar: ""
+}
+
 // DEFAULT
 export const DEFAULT_USER: IUser = {
     user_id: "",

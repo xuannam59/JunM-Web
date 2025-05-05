@@ -22,8 +22,8 @@ const SongInfo: React.FC = () => {
       <div className="flex items-center">
         <div className="w-[64px] h-[64px] rounded-sm overflow-hidden mr-4">
           <img
-            src={currentSong?.thumbnail_url || "https://placehold.co/64x64.png"}
-            alt={currentSong?.title || "song-thumb"}
+            src={currentSong.thumbnail_url || "https://placehold.co/64x64.png"}
+            alt={currentSong.title || "song-thumb"}
             className="w-full h-full object-cover"
           />
         </div>
@@ -31,19 +31,19 @@ const SongInfo: React.FC = () => {
           <div className="relative w-full overflow-hidden">
             <div className={`flex w-[200%] whitespace-nowrap ${animation && "marquee-animation"}`}>
               <div className="w-[100%] pr-2.5 text-sm">
-                {currentSong?.title || "Song name"}
+                {currentSong.title || "Song name"}
               </div>
               {animation &&
                 <div className="w-[100%] pr-2.5 text-sm" aria-hidden="true">
-                  {currentSong?.title || "Song name"}
+                  {currentSong.title || "Song name"}
                 </div>
               }
             </div>
           </div>
-          <span className="text-sm text-gray-500 truncate">{currentSong?.artist?.artist_name || "Tên ca sĩ"}</span>
+          <span className="text-sm text-gray-500 truncate">{currentSong.artist.artist_name || "Tên ca sĩ"}</span>
         </div>
         <div className="flex items-center ml-2.5">
-            {currentSong?.likes.includes(
+            {currentSong.likes.includes(
                     {
                         song_id: currentSong.artist_id,
                         user_id: user.user_id

@@ -1,12 +1,12 @@
 import { IBackendRes, IBackendResWithPagination } from "@/types/backend.type";
 import axios from "@/configs/axios-customize";
-import { IListeningHistory, IListeningHistoryForm, IUser } from "@/types/user.type";
+import { IListeningHistory, IListeningHistoryForm, IUser, IUserForm } from "@/types/user.type";
 
 export const callGetUsers = (query: unknown) => {
     return axios.get<IBackendResWithPagination<IUser>>(`api/v1/users/all?${query}`);
 }
 
-export const callEditUser = (data: IUser) => {
+export const callEditUser = (data: IUserForm) => {
     return axios.patch<IBackendRes<string>>(`api/v1/users/update/${data.user_id}`, data);
 }
 

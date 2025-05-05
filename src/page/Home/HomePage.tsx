@@ -71,7 +71,7 @@ const Home: React.FC = () => {
                                     alt={song.title}
                                     className="w-full h-full rounded-md object-cover shadow-md"
                                 />
-                                {song.song_id === currentSong?.song_id ? (
+                                {song.song_id === currentSong.song_id ? (
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-md">
                                         <Lottie animationData={playingAnimation} loop={true} style={{width: 32, height: 32}} />
                                     </div>
