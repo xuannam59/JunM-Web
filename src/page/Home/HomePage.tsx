@@ -1,6 +1,6 @@
 // src/pages/Home.tsx
-import { useAppDispatch, useAppSelector } from '@/ redux/hook';
-import { doPlaySong } from '@/ redux/reducers/song.reducer';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { doPlaySong } from '@/redux/reducers/song.reducer';
 import { callGetSongs } from '@/apis/song.api';
 import { ISong } from '@/types/song.type';
 import { useTheme } from '@/utils/ThemeProvider';
@@ -31,6 +31,7 @@ const Home: React.FC = () => {
 
     const handleClickPlay = (song: ISong) => {
         dispatch(doPlaySong({song}));
+
     }
 
     return (
@@ -72,7 +73,7 @@ const Home: React.FC = () => {
                                 />
                                 {song.song_id === currentSong?.song_id ? (
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-md">
-                                        <Lottie animationData={playingAnimation} loop={true} style={{width: 32, height: 32}} color='#cccc'/>
+                                        <Lottie animationData={playingAnimation} loop={true} style={{width: 32, height: 32}} />
                                     </div>
                                 ) : (
                                     <button
@@ -87,12 +88,14 @@ const Home: React.FC = () => {
                             {/* Thông tin bài hát */}
                             <div className="flex flex-col min-w-0 ml-3 sm:ml-4 flex-1">
                                 <span 
-                                    className={`text-base font-medium w-fit cursor-pointer truncate${darkMode ? 'text-white' : 'text-gray-900'}`}
+                                    className={`text-base font-medium w-fit cursor-pointer truncate
+                                        ${darkMode ? 'text-white' : 'text-gray-900'}`}
                                 >
                                     {song.title}
                                 </span>
                                 <span
-                                    className={`text-sm truncate w-fit cursor-pointer ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                    className={`text-sm truncate cursor-pointer 
+                                        ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
                                 >
                                     {song.artist?.artist_name || ''}
                                 </span>

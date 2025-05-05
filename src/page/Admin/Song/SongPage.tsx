@@ -2,7 +2,7 @@ import { callDeleteSong, callGetSongs } from "@/apis/song.api";
 import TableCommon from "@/components/common/TableCommon";
 import TitleCommon from "@/components/common/TitleCommon";
 import SongModal from "@/components/modals/SongModal";
-import { ISong, ISongFilter } from "@/types/song.type";
+import { DEFAULT_SONG_FILTER, ISong, ISongFilter } from "@/types/song.type";
 import { numberWithCommas, replaceSlug } from "@/utils/constant";
 import { App, Avatar, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -11,13 +11,9 @@ import { useCallback, useEffect, useState } from "react";
 import SongFilter from "@/components/filters/SongFilter";
 import { callGetArtists } from "@/apis/artist.api";
 import { BaseOptionType } from "antd/es/select";
+import { DEFAULT_PAGE_SIZE, DEFAULT_SORT } from "@/utils/default";
 
-const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_SORT = "-created_at";
-const DEFAULT_FILTER: ISongFilter = {
-  artist_id: "",
-  genre: ""
-};
+
 let timeoutId: ReturnType<typeof setTimeout>;
 
 
@@ -33,7 +29,7 @@ const SongPage = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortQuery, setSortQuery] = useState<string>(DEFAULT_SORT);
   const [searchText, setSearchText] = useState<string>();
-  const [filters, setFilters] = useState<ISongFilter>(DEFAULT_FILTER);
+  const [filters, setFilters] = useState<ISongFilter>(DEFAULT_SONG_FILTER);
   const [artistsSelect, setArtistsSelect] = useState<BaseOptionType[]>([]);
 
   const getSongs = useCallback(async () => {
@@ -134,7 +130,7 @@ const SongPage = () => {
   const handleReset = () => {
     setSortQuery(DEFAULT_SORT);
     setSearchText(undefined);
-    setFilters(DEFAULT_FILTER);
+    setFilters(DEFAULT_SONG_FILTER);
     setCurrent(1);
   };
 

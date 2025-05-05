@@ -64,6 +64,6 @@ export const musicGenres = [
 // Định dạng thời gian mm:ss
 export  const formatTime = (sec: number) => {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
-    const s = Math.ceil(sec % 60).toString().padStart(2, '0');
+    const s = Math.round(sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
 };

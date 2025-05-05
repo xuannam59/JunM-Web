@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/ redux/hook'
+import { useAppSelector } from '@/redux/hook'
 import { useTheme } from '@/utils/ThemeProvider'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import React from 'react'

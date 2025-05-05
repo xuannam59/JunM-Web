@@ -1,4 +1,4 @@
-import { IArtist } from "./artist.type";
+import { DEFAULT_ARTIST, IArtist } from "./artist.type";
 import { IPlaylistSong } from "./playlist.type";
 import { IListeningHistory } from "./user.type";
 
@@ -42,4 +42,33 @@ export interface ISongForm {
 export interface ISongFilter {
     artist_id: string;
     genre: string;
+}
+
+// DEFAULT
+export const DEFAULT_LIKE: ILike = {
+    user_id: "",
+    song_id: "",
+    liked_at: new Date()
+};
+
+export const DEFAULT_SONG: ISong = {
+    song_id: "",
+    title: "",
+    thumbnail_url: "",
+    file_url: "",
+    listens: 0,
+    durations: 0,
+    lyrics: "",
+    genre: "",
+    release_date: new Date(),
+    artist_id: "",
+    artist: DEFAULT_ARTIST,
+    likes: [],
+    playlistSongs: [],
+    listeningHistory: []
+};
+
+export const  DEFAULT_SONG_FILTER = {
+    artist_id: "",
+    genre: ""
 }

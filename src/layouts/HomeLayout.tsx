@@ -1,8 +1,8 @@
 import Header from '@/components/home/Header';
-import PlayMusic from '@/components/home/PlayMusic';
 import SiderBar from '@/components/home/SiderBar';
 import { useTheme } from '@/utils/ThemeProvider';
 import { Outlet } from 'react-router-dom';
+import PlayMusic from '@/components/home/PlayMusic';
 
 const HomeLayout = () => {
     const { darkMode } = useTheme();

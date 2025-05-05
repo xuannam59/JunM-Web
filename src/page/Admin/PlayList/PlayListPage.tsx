@@ -9,9 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import PlayListModal from "@/components/modals/PlayListModal";
 import { callDeletePlaylist, callGetPlaylists } from "@/apis/playlist.api";
 import PlaylistDetailDrawer from "@/components/drawers/PlaylistDetailDrawer";
+import { DEFAULT_PAGE_SIZE, DEFAULT_SORT } from "@/utils/default";
 
-const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_SORT = "-created_at";
 let timeoutId: ReturnType<typeof setTimeout>;
 
 const PlayListPage = () => {

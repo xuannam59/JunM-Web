@@ -1,5 +1,5 @@
-import { ISong } from "./song.type";
-import { IUser } from "./user.type";
+import { DEFAULT_SONG, ISong } from "./song.type";
+import { DEFAULT_USER, IUser } from "./user.type";
 
 export interface IPlaylistSong {
     playlist_id: string;
@@ -32,3 +32,22 @@ export interface IPlaylistSongForm {
     playlist_id: string;
     song_id: string;
 }
+
+// DEFAULT
+export const DEFAULT_PLAYLIST: IPlayList = {
+    playlist_id: "",
+    user_id: "",
+    title: "",
+    is_public: false,
+    slug: "",
+    playlistSongs: [],
+    user: DEFAULT_USER
+};
+
+export const DEFAULT_PLAYLIST_SONG: IPlaylistSong = {
+    playlist_id: "",
+    song_id: "",
+    added_at: new Date(),
+    song: DEFAULT_SONG,
+    playList: DEFAULT_PLAYLIST
+};

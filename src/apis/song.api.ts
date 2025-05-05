@@ -2,6 +2,10 @@ import { IBackendRes, IBackendResWithPagination } from "@/types/backend.type";
 import axios from "@/configs/axios-customize";
 import { ISong, ISongForm } from "@/types/song.type";
 
+export const callGetSongDetail = (song_id: string) => {
+    return axios.get<IBackendRes<ISong>>(`api/v1/songs/detail/${song_id}`);
+}
+
 export const callGetSongs = (query: unknown) => {
     return axios.get<IBackendResWithPagination<ISong>>(`api/v1/songs/all?${query}`);
 }

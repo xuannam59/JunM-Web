@@ -1,4 +1,4 @@
-import { IUser } from "@/types/user.type";
+import { DEFAULT_USER, IUser } from "@/types/user.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface IAuthState {
@@ -7,17 +7,6 @@ interface IAuthState {
     user: IUser
 }
 
-const DEFAULT_USER = {
-    user_id: "",
-    email: "",
-    username: "",
-    full_name: "",
-    role: "",
-    avatar: "",
-    number_phone: "",
-    google_id: "",
-    listeningHistories: []
-}
 
 const initialState: IAuthState = {
     isLoading: false,

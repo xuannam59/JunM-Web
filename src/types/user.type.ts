@@ -35,3 +35,23 @@ export interface IUser {
     updated_at?: Date;
     deleted_at?: Date;
 }
+
+// DEFAULT
+export const DEFAULT_USER: IUser = {
+    user_id: "",
+    email: "",
+    username: "",
+    full_name: "",
+    role: "",
+    avatar: "",
+    number_phone: "",
+    google_id: "",
+    listeningHistories: []
+};
+
+export const DEFAULT_LISTENING_HISTORY: IListeningHistory = {
+    history_id: "",
+    user_id: "",
+    listened_at: new Date(),
+    user: DEFAULT_USER
+};

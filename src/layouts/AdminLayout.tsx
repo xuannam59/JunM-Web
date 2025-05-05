@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb';
-import { useAppSelector } from '@/ redux/hook';
+import { useAppSelector } from '@/redux/hook';
 
 const AdminLayout = () => {
   const { darkMode } = useTheme();

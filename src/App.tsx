@@ -1,7 +1,7 @@
 import Routers from "./routers/Router"
 import { useEffect } from "react";
-import { useAppDispatch } from "./ redux/hook";
-import { doGetAccount } from "./ redux/reducers/auth.reducer";
+import { useAppDispatch } from "./redux/hook";
+import { doGetAccount } from "./redux/reducers/auth.reducer";
 import { callGetAccount } from "./apis/auth.api";
 
 

@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from '@/ redux/hook';
-import { doLogout } from '@/ redux/reducers/auth.reducer';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { doLogout } from '@/redux/reducers/auth.reducer';
 import { callLogout } from '@/apis/auth.api';
 import { routes } from '@/utils/constant';
 import { useTheme } from '@/utils/ThemeProvider';
