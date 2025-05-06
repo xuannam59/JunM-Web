@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doSetIsPlaying } from '@/redux/reducers/song.reducer';
+import { doBackSong, doNextSong, doSetIsPlaying } from '@/redux/reducers/song.reducer';
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import {
@@ -15,23 +15,37 @@ import ProcessBar from './ProcessBar';
 
 interface PlayerControlsProps {
     audio: HTMLAudioElement | null;
-    isPlaying: boolean;
 }
 
-const PlayerControls: React.FC<PlayerControlsProps> = (props) => {
-    const {
-        isPlaying, audio
-    } = props;
+const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
     const [isShuffle, setIsShuffle] = useState(false);
     const [isRepeat, setIsRepeat] = useState(false);
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
+    const {isPlaying, currentSong, playlist, history} = song;
 
+    useEffect(() => {
+        if (!audio) return;
+        if (isPlaying) {
+        audio.play();
+        } else {
+        audio.pause();
+        }
+    }, [isPlaying, currentSong, audio]);
+    
     const handlePlayPause = () => {
         dispatch(doSetIsPlaying());
     };
-    
+
+    const handleSkipBack = () => {
+        dispatch(doBackSong());
+    }
+
+    const handleSkipForward = () => {
+        dispatch(doNextSong());
+    }
+
     return ( <>
         <div className="flex items-center gap-2">
             <Button type='text' 
@@ -42,8 +56,8 @@ const PlayerControls: React.FC<PlayerControlsProps> = (props) => {
             </Button>
             <Button 
                 type='text'
-                onClick={() => 1}
-                disabled={song.history.length === 0}
+                onClick={handleSkipBack}
+                disabled={history.length === 0}
             >
                 <TbPlayerSkipBack size={22} />
             </Button>
@@ -63,8 +77,8 @@ const PlayerControls: React.FC<PlayerControlsProps> = (props) => {
             </Button>
             <Button 
                 type='text'                
-                onClick={() => 1}
-                disabled={song.playlist.length === 0}
+                onClick={handleSkipForward}
+                disabled={playlist.length === 0}
             >
                 <TbPlayerSkipForward size={22} />
             </Button>

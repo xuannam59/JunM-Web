@@ -1,4 +1,5 @@
-import { useAppSelector } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { doNextSong } from "@/redux/reducers/song.reducer";
 import { formatTime } from "@/utils/song.constant";
 import { Slider } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,7 +14,9 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [seekingTime, setSeekingTime] = useState<number | null>(null);
 
-    const currentSong = useAppSelector(state => state.song.currentSong);
+    const dispatch = useAppDispatch();
+    const song = useAppSelector(state => state.song);
+    const {currentSong, playlist} = song;
 
     // Cập nhật currentTime khi audio phát
     useEffect(() => {
@@ -22,11 +25,14 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
             setCurrentTime(audio.currentTime)
             if(audio.currentTime === audio.duration){
                 if(isRepeat) {
-                    setCurrentTime(0);
                     setTimeout(()=> {
+                        setCurrentTime(0);
                         audio.play();
-                    }, 1000)
-                }else {
+                    }, 2000);
+                }else if(playlist.length > 0) {
+                    dispatch(doNextSong());
+                }
+                else {
                     handlePlayPause();
                 }
             }
@@ -68,24 +74,24 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
     };
 
     
-  return (
-    <div className="w-full mt-1 h-fit">
-    <div className="flex justify-center items-center">
-        <div className="w-fit text-sm">{formatTime(seekingTime !== null ? seekingTime : currentTime)}</div>
-        <div className="w-full mx-3">
-        <Slider
-            className='custom-slider !m-0'
-            tooltip={{ formatter: null }}
-            min={0}
-            max={currentSong.durations}
-            value={seekingTime !== null ? seekingTime : currentTime}
-            onChange={(value) => setSeekingTime(value)}
-            onChangeComplete={handleSliderChangeComplete}
-        />
+    return (
+        <div className="w-full mt-1 h-fit">
+            <div className="flex justify-center items-center">
+                <div className="w-fit text-sm">{formatTime(seekingTime !== null ? seekingTime : currentTime)}</div>
+                <div className="w-full mx-3">
+                <Slider
+                    className='custom-slider !m-0'
+                    tooltip={{ formatter: null }}
+                    min={0}
+                    max={currentSong.durations}
+                    value={seekingTime !== null ? seekingTime : currentTime}
+                    onChange={(value) => setSeekingTime(value)}
+                    onChangeComplete={handleSliderChangeComplete}
+                />
+                </div>
+                <div className="w-fit text-sm">{formatTime(currentSong.durations)}</div>
+            </div>
         </div>
-        <div className="w-fit text-sm">{formatTime(currentSong.durations)}</div>
-    </div>
-</div>
   )
 }
 

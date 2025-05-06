@@ -1,17 +1,17 @@
-import { callGetSongDetail } from '@/apis/song.api';
+import { callGetSongDetail, callGetSongs } from '@/apis/song.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doGetSongByLocalStorage } from '@/redux/reducers/song.reducer';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { doGetSongByLocalStorage, doSetHistory, doSetPlaylist } from '@/redux/reducers/song.reducer';
+import React, { useCallback, useEffect, useRef} from 'react';
 import PlayerControls from './PlayerControls';
 import SongInfo from './SongInfo';
 import VolumeControl from './VolumeControl';
+import { ISong } from '@/types/song.type';
 
 const PlayMusic: React.FC = () => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [volume, setVolume] = useState(0.25);
 
     const song = useAppSelector(state => state.song);
-    const {currentSong, isPlaying} = song;
+    const {currentSong} = song;
     const dispatch = useAppDispatch();
 
     const getSong = useCallback(async (song_id: string) => {
@@ -23,6 +23,34 @@ const PlayMusic: React.FC = () => {
         }
     }, [dispatch]);
 
+    const getSongs = useCallback(async () => {
+        const res = await callGetSongs("random=true&pageSize=15");
+        if(res.data) {
+            dispatch(doSetPlaylist(res.data.result));
+            window.localStorage.setItem("playlist", JSON.stringify(res.data.result));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        const playlistLocal = window.localStorage.getItem("playlist");
+        const historyLocal = window.localStorage.getItem("history");
+    
+        // Xử lý playlist
+        if (playlistLocal && Array.isArray(JSON.parse(playlistLocal)) && JSON.parse(playlistLocal).length > 0) {
+            const playlist: ISong[] = JSON.parse(playlistLocal);
+            dispatch(doSetPlaylist(playlist));
+        } else {
+            getSongs();
+        }
+    
+        if (historyLocal && Array.isArray(JSON.parse(historyLocal)) && JSON.parse(historyLocal).length > 0) {
+           
+            dispatch(doSetHistory(JSON.parse(historyLocal)));
+        } else {
+            window.localStorage.setItem("history", JSON.stringify([]));
+        }
+    }, [dispatch, getSongs]);
+
     useEffect(() => {
         const song_id = window.localStorage.getItem("song_id");
         if(song_id) {
@@ -30,16 +58,7 @@ const PlayMusic: React.FC = () => {
         }
     }, [getSong]);
 
-    // Khi đổi trạng thái play/pause
-    useEffect(() => {
-        if (!audioRef.current) return;
-        if (isPlaying) {
-        audioRef.current.play();
-        } else {
-        audioRef.current.pause();
-        }
-    }, [isPlaying, currentSong]);
-
+    
   return (
     <>
        <SongInfo/>
@@ -50,14 +69,12 @@ const PlayMusic: React.FC = () => {
             />
             <PlayerControls 
                 audio={audioRef.current}
-                isPlaying={isPlaying}
              />
         </div>
 
         <VolumeControl
             audio={audioRef.current}
-            volume={volume}
-            onVolumeChange={(value) => setVolume(value)} 
+            
         />
     </>
   )
