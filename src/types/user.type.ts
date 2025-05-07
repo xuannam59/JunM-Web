@@ -14,8 +14,8 @@ export interface IListeningHistory {
 
 export interface IListeningHistoryForm {
     user_id: string;
-    song_id?: string;
-    video?: string;
+    song_id: string;
+    video_id: string;
 }
 
 export interface IUser {

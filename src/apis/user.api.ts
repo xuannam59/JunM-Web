@@ -15,9 +15,9 @@ export const callDeleteUser = (user_id: string) => {
 }
 
 export const callCreateListenHistory = (data: IListeningHistoryForm)=> {
-    return axios.post<IBackendRes<string>>('api/v1/users/listening-history', data);
+    return axios.post<IBackendRes<string>>('api/v1/users/listening-history/create', data);
 }
 
-export const callGetListenHistory = () => {
-    return axios.get<IBackendRes<IListeningHistory>>(`api/v1/users/listening-history`);
+export const callGetListenHistory = (query: unknown) => {
+    return axios.get<IBackendRes<IListeningHistory[]>>(`api/v1/users/listening-history/all?${query}`);
 }

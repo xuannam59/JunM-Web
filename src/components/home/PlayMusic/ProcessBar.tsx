@@ -1,23 +1,64 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { doNextSong, doPlaySong, doSetHistory, doSetPlaylist } from "@/redux/reducers/song.reducer";
+import { doNextSong, doSetHistory, doSetPlaylist } from "@/redux/reducers/song.reducer";
 import { formatTime } from "@/utils/song.constant";
 import { Slider } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { callCreateListenHistory } from "@/apis/user.api";
 interface IProp {
     audio:  HTMLAudioElement | null;
     handlePlayPause: () => void;
     isRepeat: boolean;
 }
+
+
 const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
 
     const [currentTime, setCurrentTime] = useState(0);
     const [seekingTime, setSeekingTime] = useState<number | null>(null);
+    const [timeLeft, setTimeLeft] = useState(60);
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
-    const {currentSong, playlist, history} = song;
+    const {currentSong, playlist, history, isPlaying} = song;
+    const user = useAppSelector(state => state.auth.user);
 
+
+    const handleCreateListenHistory = useCallback(async () => {
+        const data = {
+            user_id: user.user_id,
+            song_id: currentSong.song_id,
+            video_id: ""
+        }
+
+        const res = await callCreateListenHistory(data);
+        if(res.data) {
+            console.log("create listen history success");
+        }else {
+            console.log("create listen history failed:", res.message);
+        }
+    }, [currentSong, user]);
+
+    useEffect(() => {
+        if(timeLeft < 0) return;
+
+        const times = setInterval(() => {
+            if(isPlaying) {
+                setTimeLeft(timeLeft - 1);
+            }
+        }, 1000);
+
+        if(timeLeft === 0) {
+            handleCreateListenHistory();
+        }
+
+        console.log("timeLeft", timeLeft);
+        return () => clearInterval(times);
+    }, [isPlaying, timeLeft, handleCreateListenHistory]);
+
+    useEffect(() => {
+        setTimeLeft(60);
+    }, [currentSong]);
+    
     // Cập nhật currentTime khi audio phát
     useEffect(() => {
         if (!audio) return;
