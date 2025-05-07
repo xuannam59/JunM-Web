@@ -1,4 +1,4 @@
-import { Button, Slider, Tooltip } from 'antd';
+import { Slider, Tooltip } from 'antd';
 import { TbVolume, TbVolumeOff, TbPlaylist } from 'react-icons/tb';
 import { useTheme } from '@/utils/ThemeProvider';
 import { useEffect, useState } from 'react';

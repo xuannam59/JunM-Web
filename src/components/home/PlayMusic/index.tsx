@@ -36,7 +36,7 @@ const PlayMusic: React.FC = () => {
         const historyLocal = window.localStorage.getItem("history");
     
         // Xử lý playlist
-        if (playlistLocal && Array.isArray(JSON.parse(playlistLocal)) && JSON.parse(playlistLocal).length > 0) {
+        if (playlistLocal && Array.isArray(JSON.parse(playlistLocal))) {
             const playlist: ISong[] = JSON.parse(playlistLocal);
             dispatch(doSetPlaylist(playlist));
         } else {
@@ -63,13 +63,15 @@ const PlayMusic: React.FC = () => {
     <>
        <SongInfo/>
         <div className="flex-1 flex flex-col items-center justify-center max-w-[40vw]">
-            <audio
-                ref={audioRef}
-                src={currentSong.file_url || ''}
-            />
+            {currentSong.file_url && 
+                <audio
+                    ref={audioRef}
+                    src={currentSong.file_url}
+                />
+            }
             <PlayerControls 
                 audio={audioRef.current}
-             />
+            />
         </div>
 
         <VolumeControl

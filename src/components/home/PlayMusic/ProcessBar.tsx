@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { doNextSong } from "@/redux/reducers/song.reducer";
+import { doNextSong, doPlaySong, doSetHistory, doSetPlaylist } from "@/redux/reducers/song.reducer";
 import { formatTime } from "@/utils/song.constant";
 import { Slider } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,7 +16,7 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
-    const {currentSong, playlist} = song;
+    const {currentSong, playlist, history} = song;
 
     // Cập nhật currentTime khi audio phát
     useEffect(() => {
@@ -32,7 +32,13 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
                 }else if(playlist.length > 0) {
                     dispatch(doNextSong());
                 }
-                else {
+                else if(history.length > 0){
+                    dispatch(doSetPlaylist([...history, currentSong]));
+                    dispatch(doNextSong());
+                    dispatch(doSetHistory([]));
+                    window.localStorage.setItem("history", JSON.stringify([]));
+                    handlePlayPause();
+                }else {
                     handlePlayPause();
                 }
             }

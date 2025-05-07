@@ -17,7 +17,7 @@ export interface ISong{
     durations: number;
     lyrics: string;
     genre: string;
-    release_date: Date;
+    release_date?: Date;
     artist_id: string;
     artist: IArtist;
     created_at?: Date;
@@ -48,7 +48,6 @@ export interface ISongFilter {
 export const DEFAULT_LIKE: ILike = {
     user_id: "",
     song_id: "",
-    liked_at: new Date()
 };
 
 export const DEFAULT_SONG: ISong = {
@@ -60,7 +59,6 @@ export const DEFAULT_SONG: ISong = {
     durations: 0,
     lyrics: "",
     genre: "",
-    release_date: new Date(),
     artist_id: "",
     artist: DEFAULT_ARTIST,
     likes: [],

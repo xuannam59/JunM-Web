@@ -24,7 +24,7 @@ const Home: React.FC = () => {
     }, [getSongs]);
 
     return (
-        <div className={`w-full min-h-[400px]`}>
+        <div className={`w-full min-h-[400px] overflow-scroll`}>
             {user.listeningHistories.length > 0 && 
                 <div className="mb-8">
                     <div className="flex">

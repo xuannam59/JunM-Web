@@ -1,20 +1,20 @@
 /* Tùy chỉnh thanh cuộn trong Webkit-based browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
     width: 8px; /* Độ rộng thanh cuộn */
-  }
+}
   
-  ::-webkit-scrollbar-track { /* Phần nền của phần thanh cuộn (màu nền trong suốt) */
+::-webkit-scrollbar-track { /* Phần nền của phần thanh cuộn (màu nền trong suốt) */
     border-radius: 10px;
-  }
+}
   
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #d3d3d3; /* Màu của thanh cuộn */
     border-radius: 10px; /* Bo góc của thanh cuộn */
-  }
+}
   
-  ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #bcbcbc; /* Màu của thanh cuộn khi hover */
-  }
+}
 
 
 /* Thanh cuộn Dark Mode */
@@ -41,4 +41,9 @@
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none; /* Ẩn mặc định */
 }

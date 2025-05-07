@@ -12,7 +12,7 @@ const HomeLayout = () => {
 
     return (
         <>
-            <div className={`min-h-screen w-full max-w-[2560px] flex ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+            <div className={`min-h-screen w-full max-w-[2560px] relative flex ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
                 <aside className={`w-[240px] min-h-[100vh] shadow-sm fixed left-0 top-0 bottom-0
                     ${darkMode ? `bg-[#292929] text-gray-300` : 'bg-[#F9F9F9] text-black'}`}
                 >
@@ -28,17 +28,17 @@ const HomeLayout = () => {
                 </header>
 
                 <main 
-                    className={`w-[calc(100vw-240px)] ml-[240px] mt-[70px] min-h-[calc(100vh-70px)] overflow-y-auto p-[60px] transition-all
+                    className={`w-[calc(100vw-240px)] ml-[240px] mt-[70px] min-h-[calc(100vh-70px)] p-[60px] transition-all
                     ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}
-                    ${isCollapsed ? "w-[calc(100vw-240px-330px)]" : "w-[calc(100vw-240px)]"}`}
+                    ${isCollapsed ? "mr-[330px]" : ""}`}
                 >
                     <Outlet />
                 </main>
 
                 <div
                     className={`h-[calc(100vh-90px)] max-h-[calc(100vh-90px)] transition-all duration-200 fixed top-0 bottom-[90px] right-0
-                        border-l-2 border-[#E5E5E5]
-                        ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}
+                        border-l-1
+                        ${darkMode ? 'bg-[#1E1E1E] border-[#353535]' : 'bg-white border-[#E5E5E5]'}
                         ${isCollapsed ? "w-[330px]" : "w-0"}
                     `}
                 >
