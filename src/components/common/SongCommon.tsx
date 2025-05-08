@@ -2,11 +2,13 @@ import { useAppDispatch, useAppSelector } from '@/redux/hook'
 import { ISong } from '@/types/song.type'
 import { useTheme } from '@/utils/ThemeProvider'
 import playingAnimation from "@/assets/animations/playing.json";
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Lottie from 'lottie-react';
 import { TbDots, TbPlayerPlay, TbThumbUp, TbThumbUpFilled } from 'react-icons/tb';
-import { Button } from 'antd';
-import { doSetIsPlaying } from '@/redux/reducers/song.reducer';
+import { Button, Tooltip } from 'antd';
+import { doSetIsPlaying, doUpdateSongLikes } from '@/redux/reducers/song.reducer';
+import { callToggleLikeSong } from '@/apis/song.api';
+import { App } from 'antd';
 
 interface IProp {
     songData: ISong;
@@ -15,12 +17,43 @@ interface IProp {
 
 const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
     const {darkMode} = useTheme();
+    const {message, notification} = App.useApp();
+
+    const [isLiked, setIsLiked] = useState(false);
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
     const {currentSong, isPlaying} = song;
-    const user = useAppSelector(state => state.auth.user);
+    const auth = useAppSelector(state => state.auth);
+    const {user, isAuthenticated} = auth;
 
+    useEffect(() => {
+        setIsLiked(songData.likes.some(like => like.user_id === user.user_id));
+    }, [songData.likes, user.user_id]);
+
+    const handleToggleLikeSong = useCallback(async() => {
+        if(!isAuthenticated) {
+            message.error("Please login to like song");
+            return;
+        }
+        const res = await callToggleLikeSong(songData.song_id);
+        if(res.data){
+            message.success(res.data);
+            setIsLiked(!isLiked);
+            dispatch(doUpdateSongLikes({
+                song_id: songData.song_id,
+                user_id: user.user_id,
+                isLiked: !isLiked
+            }));
+        }else{
+            notification.error({
+                message: "Like error",
+                description: res.message
+            });
+        }
+    }, [songData.song_id, isAuthenticated, message, notification, isLiked, dispatch, user.user_id]);
+
+    console.log(isLiked);
   return (
     <div
         key={songData.song_id}
@@ -80,16 +113,20 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
         </div>
         {/* Icon bên phải */}
         <div className="hidden group-hover:flex items-center ml-2">
-            <Button type='text' className="hover:!text-[#8f5cff] transition" shape="circle">
-                {songData.likes.includes({
-                    user_id: user.user_id,
-                    song_id: songData.song_id
-                }) ? 
-                <TbThumbUpFilled size={20}/>
-                :
-                <TbThumbUp size={20}/>
-                }
-            </Button>
+            <Tooltip title={isLiked ? "Dislike" : "Like"}>
+                <Button 
+                    type='text' 
+                    className="hover:!text-[#8f5cff] transition" 
+                    shape="circle"
+                    onClick={handleToggleLikeSong}
+                >
+                    {isLiked ? 
+                    <TbThumbUpFilled size={20}/>
+                    :
+                    <TbThumbUp size={20}/>
+                    }
+                </Button>
+            </Tooltip>
             <Button type='text' className="hover:!text-[#8f5cff] transition" shape="circle"><TbDots size={20}/></Button>
         </div>
     </div>

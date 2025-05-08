@@ -21,3 +21,7 @@ export const callUpdateSong = (data: ISongForm) => {
 export const callDeleteSong = (song_id: string) => {
     return axios.delete<IBackendRes<string>>(`api/v1/songs/delete/${song_id}`);
 }
+
+export const callToggleLikeSong = (song_id: string) => {
+    return axios.post<IBackendRes<string>>(`api/v1/songs/toggle-like/${song_id}`);
+}

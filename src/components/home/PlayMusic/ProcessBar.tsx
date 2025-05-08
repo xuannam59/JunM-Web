@@ -68,6 +68,7 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
                 if(isRepeat) {
                     setTimeout(()=> {
                         setCurrentTime(0);
+                        setTimeLeft(60);
                         audio.play();
                     }, 2000);
                 }else if(playlist.length > 0) {

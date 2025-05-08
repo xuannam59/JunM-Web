@@ -1,12 +1,20 @@
-import { useAppSelector } from '@/redux/hook';
-import { Button, Tooltip } from 'antd';
-import { useEffect, useState } from 'react';
+import { callToggleLikeSong } from '@/apis/song.api';
+import { useAppSelector, useAppDispatch } from '@/redux/hook';
+import { doUpdateSongLikes } from '@/redux/reducers/song.reducer';
+import { App, Button, Tooltip } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
 import { TbDots, TbThumbUp, TbThumbUpFilled } from 'react-icons/tb';
 
 
 const SongInfo: React.FC = () => {
     const [animation, setAnimation] = useState(false);
-    const user = useAppSelector(state => state.auth.user);
+    const [isLiked, setIsLiked] = useState(false);
+
+    const {message, notification} = App.useApp()
+    const dispatch = useAppDispatch();
+
+    const auth = useAppSelector(state => state.auth);
+    const {isAuthenticated, user} = auth;
     const currentSong = useAppSelector(state => state.song.currentSong);
 
     useEffect(() => {
@@ -15,7 +23,33 @@ const SongInfo: React.FC = () => {
         } else {
           setAnimation(false);
         }
-      }, [currentSong]);
+    }, [currentSong]);
+
+    useEffect(() => {
+        setIsLiked(currentSong.likes.some(like => like.user_id === user.user_id));
+    }, [currentSong.likes, user.user_id]);
+
+    const handleToggleLikeSong = useCallback(async() => {
+        if(!isAuthenticated) {
+            message.error("Please login to like song");
+            return;
+        }
+        const res = await callToggleLikeSong(currentSong.song_id);
+        if(res.data){
+            message.success(res.data);
+            setIsLiked(!isLiked);
+            dispatch(doUpdateSongLikes({
+                song_id: currentSong.song_id,
+                user_id: user.user_id,
+                isLiked: !isLiked
+            }));
+        }else{
+            notification.error({
+                message: "Like error",
+                description: res.message
+            });
+        }
+    }, [currentSong.song_id, isAuthenticated, message, notification, isLiked, dispatch, user.user_id]);
 
   return (
     <div className="w-[30%] flex items-center">
@@ -43,23 +77,23 @@ const SongInfo: React.FC = () => {
           <span className="text-sm text-gray-500 truncate">{currentSong.artist.artist_name || "Tên ca sĩ"}</span>
         </div>
         <div className="flex items-center ml-2.5">
-            {currentSong.likes.includes(
-                    {
-                        song_id: currentSong.artist_id,
-                        user_id: user.user_id
-                    } 
-                ) ? 
-                <Tooltip title="Dislike">
-                    <Button icon={<TbThumbUpFilled size={20} />} type='text' />
-                </Tooltip>
-                :
-                <Tooltip title="Like">
-                    <Button icon={<TbThumbUp size={20} />} type='text' />
-                </Tooltip>
-            }
-          <Tooltip title="Xem thêm" color=''>
-            <Button icon={<TbDots size={20} />} type='text' />
-          </Tooltip>
+            <Tooltip title={isLiked ? "Dislike" : "Like"}>
+                    <Button 
+                        type='text' 
+                        className="hover:!text-[#8f5cff] transition" 
+                        shape="circle"
+                        onClick={handleToggleLikeSong}
+                    >
+                        {isLiked ? 
+                        <TbThumbUpFilled size={20}/>
+                        :
+                        <TbThumbUp size={20}/>
+                        }
+                    </Button>
+            </Tooltip>
+            <Tooltip title="Xem thêm" color=''>
+                <Button icon={<TbDots size={20} />} type='text' />
+            </Tooltip>
         </div>
       </div>
     </div>
