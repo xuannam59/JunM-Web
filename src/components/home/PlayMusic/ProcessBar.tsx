@@ -1,18 +1,16 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { doNextSong, doSetHistory, doSetPlaylist } from "@/redux/reducers/song.reducer";
+import { doNextSong, doSetHistory, doSetIsPlaying, doSetPlaylist } from "@/redux/reducers/song.reducer";
 import { formatTime } from "@/utils/song.constant";
 import { Slider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { callCreateListenHistory } from "@/apis/user.api";
 interface IProp {
     audio:  HTMLAudioElement | null;
-    handlePlayPause: () => void;
     isRepeat: boolean;
 }
 
 
-const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
-
+const ProcessBar: React.FC<IProp> = ({audio, isRepeat}) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [seekingTime, setSeekingTime] = useState<number | null>(null);
     const [timeLeft, setTimeLeft] = useState(60);
@@ -50,8 +48,7 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
         if(timeLeft === 0) {
             handleCreateListenHistory();
         }
-
-        console.log("timeLeft", timeLeft);
+        
         return () => clearInterval(times);
     }, [isPlaying, timeLeft, handleCreateListenHistory]);
 
@@ -71,17 +68,8 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
                         setTimeLeft(60);
                         audio.play();
                     }, 2000);
-                }else if(playlist.length > 0) {
-                    dispatch(doNextSong());
-                }
-                else if(history.length > 0){
-                    dispatch(doSetPlaylist([...history, currentSong]));
-                    dispatch(doNextSong());
-                    dispatch(doSetHistory([]));
-                    window.localStorage.setItem("history", JSON.stringify([]));
-                    handlePlayPause();
                 }else {
-                    handlePlayPause();
+                    dispatch(doNextSong());
                 }
             }
         };
@@ -89,14 +77,15 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
         return () => {
             audio.removeEventListener('timeupdate', handleTimeUpdate);
         };
-    }, [audio, isRepeat, handlePlayPause]);
+    }, [audio, isRepeat, dispatch]);
 
     useEffect(() => {
         const song_time = window.localStorage.getItem("song_time");
+        setCurrentTime(song_time ? +song_time : 0);
         if (audio) {
-            audio.currentTime = song_time ? +song_time : 0;
+            audio.currentTime = currentTime;
         }
-    }, [currentSong, audio]);
+    }, [audio]);
 
     // Lưu thời gian phát vào localStorage mỗi 3 giây khi đang phát
     const currentTimeRef = useRef(currentTime);
@@ -117,7 +106,7 @@ const ProcessBar: React.FC<IProp> = ({audio, handlePlayPause, isRepeat}) => {
         setCurrentTime(value);
         setSeekingTime(null);
         if (audio) {
-        audio.currentTime = value;
+            audio.currentTime = value;
         }
     };
 

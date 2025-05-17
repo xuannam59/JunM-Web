@@ -122,10 +122,10 @@ const TableCommon = (props: IProps) => {
             showSizeChanger: true,
         }}
         onChange={onChangePagination}
-        rowClassName={() => darkMode ? 'bg-[#353535] text-white hover:bg-[#2A2A2A]' : 'hover:bg-gray-50'}
+        rowClassName={() => darkMode ? 'custom-table-row-selected' : 'hover:bg-gray-50'}
         scroll={{
             x: "max-content",
-            y: 57*10
+            y: 57*8
         }}
         rowKey={rowKey}
       />

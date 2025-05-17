@@ -43,7 +43,3 @@
   background: transparent;
 }
 
-/* Firefox */
-* {
-  scrollbar-width: none; /* Ẩn mặc định */
-}

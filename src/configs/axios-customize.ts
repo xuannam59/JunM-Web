@@ -24,6 +24,14 @@ const handleRefreshToken = async (): Promise<string | null> => {
     })
 }
 
+const handleLogout = async () => {
+    return await mutex.runExclusive(async () => {
+        const res = await instance.post<IBackendRes<string>>("api/v1/auths/logout");
+        if (res && res.data) return res.data;
+        else return res.message;
+    })
+}
+
 // Add a request interceptor
 instance.interceptors.request.use((config) => {
     const excludedEndpoints = ['/api/auths/login', '/api/auths/register', '/api/auths/logout'];
@@ -68,12 +76,15 @@ instance.interceptors.response.use(
         if (
             error.config && error.response
             && +error.response.status === 400
-            && error.config.url === "/api/v1/auth/refresh-token"
-            && location.pathname.startsWith("/admin")
+            && error.config.url === "/api/v1/auths/refresh-token"
         ) {
-            const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
-            alert(message);
-            window.location.href = "/login"
+            if(location.pathname.startsWith("/admin")) {
+                const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
+                alert(message);
+                window.location.href = "/login";
+            }
+            window.localStorage.removeItem("access_token");
+            await handleLogout();
         }
         return error?.response?.data ?? Promise.reject(error);
     });

@@ -3,7 +3,7 @@ import { TbVolume, TbVolumeOff, TbPlaylist } from 'react-icons/tb';
 import { useTheme } from '@/utils/ThemeProvider';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doSetIsCollapsed } from '@/redux/reducers/song.reducer';
+import { doSetIsCollapsed, doSetVolumeValue } from '@/redux/reducers/song.reducer';
 
 interface VolumeControlProps {
   audio: HTMLAudioElement | null;
@@ -11,10 +11,21 @@ interface VolumeControlProps {
 
 const VolumeControl: React.FC<VolumeControlProps> = ({ audio}) => {
     const { darkMode } = useTheme();
-    const [volume, setVolume] = useState(0.25);
 
     const dispatch = useAppDispatch();
     const isCollapsed = useAppSelector(state => state.song.isCollapsed);
+    const volume = useAppSelector(state => state.song.volumeValue);
+
+   useEffect(() => {
+    const volume = window.localStorage.getItem("volume");
+    if(volume) {
+        dispatch(doSetVolumeValue(+volume));
+    }else {
+        window.localStorage.setItem("volume", "0.25");
+        dispatch(doSetVolumeValue(0.25));
+    }
+   }, []);
+
     // Khi đổi volume
     useEffect(() => {
         if (audio) {
@@ -26,9 +37,9 @@ const VolumeControl: React.FC<VolumeControlProps> = ({ audio}) => {
     <div className="w-[30%] flex justify-end items-center cursor-pointer">
         <div className="flex items-center">
             {volume === 0 ? 
-            <TbVolumeOff size={22} onClick={() => setVolume(0.25)}/>
+            <TbVolumeOff size={22} onClick={() => dispatch(doSetVolumeValue(0.25))}/>
             :
-            <TbVolume size={22} onClick={() => setVolume(0)}/>
+            <TbVolume size={22} onClick={() => audio ? audio.volume = 0 : null}/>
             }
             <Slider
             className='custom-slider my-0 ml-2 w-[70px]'
@@ -37,7 +48,7 @@ const VolumeControl: React.FC<VolumeControlProps> = ({ audio}) => {
             max={0.5}
             step={0.005}
             value={volume}
-            onChange={(value) => setVolume(value)}
+            onChange={(value) => dispatch(doSetVolumeValue(value))}
             />
         </div>
         <div className={`mx-5 h-[33px] border-1 border-[#303030] opacity-10`} />

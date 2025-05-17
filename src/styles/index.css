@@ -20,3 +20,19 @@
     box-shadow: 0 0 0 2.5px rgba(238, 16, 176, 0.3) !important;
 }
 
+.custom-table-row-selected {
+    background-color: #353535 !important;
+    color: #fff !important;
+}
+
+.custom-table-row-selected:hover .ant-table-cell-fix-left,
+.custom-table-row-selected:hover .ant-table-cell-fix-right {
+    background-color: #2A2A2A !important;
+}
+
+.custom-table-row-selected .ant-table-cell-fix-left,
+.custom-table-row-selected .ant-table-cell-fix-right {
+    background-color: #353535 !important;
+    color: #fff !important;
+}
+

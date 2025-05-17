@@ -35,18 +35,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
         audio.pause();
         }
     }, [isPlaying, currentSong, audio]);
-    
-    const handlePlayPause = () => {
-        dispatch(doSetIsPlaying());
-    };
-
-    const handleSkipBack = () => {
-        dispatch(doBackSong());
-    }
-
-    const handleSkipForward = () => {
-        dispatch(doNextSong());
-    }
 
     const handleShuffle = () => {
         if (!isShuffle) {
@@ -70,7 +58,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
             </Button>
             <Button 
                 type='text'
-                onClick={handleSkipBack}
+                onClick={() => dispatch(doBackSong())}
                 disabled={history.length === 0}
             >
                 <TbPlayerSkipBack size={22} />
@@ -81,7 +69,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
                 variant="outlined"
                 type='text'
                 shape='circle'
-                onClick={handlePlayPause}
+                onClick={() =>  dispatch(doSetIsPlaying())}
             >
                 {isPlaying ? (
                 <TbPlayerPauseFilled size={24}/>
@@ -91,7 +79,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
             </Button>
             <Button 
                 type='text'                
-                onClick={handleSkipForward}
+                onClick={() => dispatch(doNextSong())}
                 disabled={playlist.length === 0}
             >
                 <TbPlayerSkipForward size={22} />
@@ -110,7 +98,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({audio}) => {
         </div>
         <ProcessBar
             audio={audio}
-            handlePlayPause={handlePlayPause}
             isRepeat={isRepeat}
         />
     </>

@@ -53,7 +53,6 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
         }
     }, [songData.song_id, isAuthenticated, message, notification, isLiked, dispatch, user.user_id]);
 
-    console.log(isLiked);
   return (
     <div
         key={songData.song_id}

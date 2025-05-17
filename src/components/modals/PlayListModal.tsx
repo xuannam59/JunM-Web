@@ -124,7 +124,6 @@ const PlayListModal = ({ isOpen, onClose, playlist, loadData }: IProps) => {
         setSelectedSongs(selectedSongs.filter(s => s.song_id !== songId));
     }
 
-    console.log(selectedSongs);
 
     return (
         <Modal

@@ -4,6 +4,7 @@ import { DEFAULT_SONG, ISong } from "@/types/song.type";
 interface ISongState {
     isPlaying: boolean;
     isCollapsed: boolean;
+    volumeValue: number;
     currentSong: ISong;
     playlist: ISong[];
     history: ISong[];
@@ -12,6 +13,7 @@ interface ISongState {
 const initialState: ISongState = {
     isPlaying: false,
     isCollapsed: false,
+    volumeValue: 0,
     currentSong: DEFAULT_SONG,
     playlist: [],
     history: [],
@@ -46,6 +48,10 @@ const songSlice = createSlice({
         doSetIsCollapsed: (state) => {
             state.isCollapsed = !state.isCollapsed;
         },
+        doSetVolumeValue: (state, action: PayloadAction<number>) => {
+            state.volumeValue = action.payload;
+            window.localStorage.setItem("volume", String(state.volumeValue));
+        },
         doNextSong: (state) => {
             if (state.playlist.length > 0) {
                 // Thêm bài hát hiện tại vào history
@@ -53,14 +59,25 @@ const songSlice = createSlice({
                 
                 const nextSong = state.playlist.shift();
                 if(nextSong) {
-
                     state.currentSong = nextSong;
-                    window.localStorage.setItem("song_id", state.currentSong.song_id);
-                    window.localStorage.setItem("song_time", "0");
-                    window.localStorage.setItem("playlist", JSON.stringify(state.playlist));
-                    window.localStorage.setItem("history", JSON.stringify(state.history));
                 }
+            }else { 
+               if(state.history.length > 0) {
+                state.playlist = [...state.history, state.currentSong];
+                state.history = [];
+                const nextSong = state.playlist.shift();
+                if(nextSong) {
+                    state.currentSong = nextSong;
+                    state.isPlaying = false;
+                }
+               }else {
+                state.isPlaying = false;
+               }
             }
+            window.localStorage.setItem("song_id", state.currentSong.song_id);
+            window.localStorage.setItem("song_time", "0");
+            window.localStorage.setItem("playlist", JSON.stringify(state.playlist));
+            window.localStorage.setItem("history", JSON.stringify(state.history));
         },
         doBackSong: (state) => {
             if (state.history.length > 0) {
@@ -118,6 +135,7 @@ const songSlice = createSlice({
 
 export const songReducer = songSlice.reducer;
 export const { 
-    doPlaySong, doSetPlaylist,doSetHistory, doGetSongByLocalStorage, 
-    doSetIsPlaying, doNextSong, doBackSong, doSetIsCollapsed, doUpdateSongLikes
+    doPlaySong, doSetPlaylist,doSetHistory, doGetSongByLocalStorage,  
+    doSetIsPlaying, doNextSong, doBackSong, doSetIsCollapsed, doUpdateSongLikes,
+    doSetVolumeValue
 } = songSlice.actions;

@@ -8,7 +8,7 @@ import { useTheme } from '@/utils/ThemeProvider';
 import { App, DatePicker, Form, Input, Modal, Select } from 'antd';
 import { BaseOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TbLink } from 'react-icons/tb';
 
 interface IProps {
@@ -40,14 +40,10 @@ const VideoModal = ({ isOpen, onClose, video, loadData }: IProps) => {
             }
             form.setFieldsValue(data);
         }
-    }, [video]);
+    }, [video, form]);
 
-    useEffect(() => {
-        getArtists();
-        getSongs();
-    }, []);
 
-    const getArtists = async () => {
+    const getArtists = useCallback(async () => {
         const res = await callGetArtists("current=1&pageSize=1000");
         if(res.data) {
             const options = res.data.result.map(item => ({label: item.artist_name, value: item.artist_id}));
@@ -58,9 +54,9 @@ const VideoModal = ({ isOpen, onClose, video, loadData }: IProps) => {
                 description:res.message
             })
         }
-    }
+    }, [notification]);
 
-    const getSongs = async () => {
+    const getSongs = useCallback(async () => {
         const res = await callGetSongs("current=1&pageSize=1000");
         if(res.data) {
             const options = res.data.result.map(item => ({label: item.title, value: item.song_id}));
@@ -72,8 +68,13 @@ const VideoModal = ({ isOpen, onClose, video, loadData }: IProps) => {
                 description:res.message
             })
         }
-    }
+    }, [notification]);
 
+    useEffect(() => {
+        getArtists();
+        getSongs();
+    }, [getArtists, getSongs]);
+    
     const handleSongChange = (songId: string) => {
         const selectedSong = songsDetail.find(song => song.song_id === songId);
         if (selectedSong) {
@@ -92,8 +93,6 @@ const VideoModal = ({ isOpen, onClose, video, loadData }: IProps) => {
             release_date: dayjs(values.release_date).format('YYYY-MM-DD') as unknown as Date,
             video_url: values.video_url,
         }
-
-        console.log(data);
 
         const toggleApi = video ? callUpdateVideo(data) : callCreateVideo(data);
         const res = await toggleApi;

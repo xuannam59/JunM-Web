@@ -3,7 +3,7 @@ import { useTheme } from '@/utils/ThemeProvider';
 import { App, Form, Input, Modal, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import { TbUpload } from 'react-icons/tb';
-import { handleChangeUpload, replaceSlug } from '@/utils/constant';
+import { capitalizeVietnamese, handleChangeUpload, replaceSlug } from '@/utils/constant';
 import { callCreateArtist, callUpdateArtist } from '@/apis/artist.api';
 import { callUploadFile } from '@/apis/file.api';
 
@@ -38,10 +38,9 @@ const ArtistModal = ({ isOpen, onClose, artist, loadData }: IProps) => {
 
     const handleSubmit = async (values: IArtistForm) => {
         setIsLoading(true);
-        console.log(values);
         const data: IArtistForm = {
             artist_id: values.artist_id,
-            artist_name: values.artist_name.trim(),
+            artist_name:capitalizeVietnamese(values.artist_name),
             avatar: ""
         }
         if (avatarUrl.length > 0) {
