@@ -26,12 +26,14 @@
 }
 
 .custom-table-row-selected:hover .ant-table-cell-fix-left,
-.custom-table-row-selected:hover .ant-table-cell-fix-right {
+.custom-table-row-selected:hover .ant-table-cell-fix-right,
+.custom-table-row-selected:hover .ant-table-column-sort {
     background-color: #2A2A2A !important;
 }
 
 .custom-table-row-selected .ant-table-cell-fix-left,
-.custom-table-row-selected .ant-table-cell-fix-right {
+.custom-table-row-selected .ant-table-cell-fix-right,
+.custom-table-row-selected .ant-table-column-sort {
     background-color: #353535 !important;
     color: #fff !important;
 }

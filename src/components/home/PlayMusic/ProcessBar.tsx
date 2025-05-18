@@ -1,135 +1,169 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { doNextSong, doSetHistory, doSetIsPlaying, doSetPlaylist } from "@/redux/reducers/song.reducer";
+import { doNextSong } from "@/redux/reducers/song.reducer";
 import { formatTime } from "@/utils/song.constant";
 import { Slider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { callCreateListenHistory } from "@/apis/user.api";
+import type { SliderSingleProps } from 'antd';
+
 interface IProp {
-    audio:  HTMLAudioElement | null;
+    audio: HTMLAudioElement | null;
     isRepeat: boolean;
 }
 
-
-const ProcessBar: React.FC<IProp> = ({audio, isRepeat}) => {
-    const [currentTime, setCurrentTime] = useState(0);
+const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
+    const [currentTime, setCurrentTime] = useState(() => {
+        const savedTime = window.localStorage.getItem("song_time");
+        return savedTime ? +savedTime : 0;
+    });
     const [seekingTime, setSeekingTime] = useState<number | null>(null);
     const [timeLeft, setTimeLeft] = useState(60);
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
-    const {currentSong, playlist, history, isPlaying} = song;
-    const user = useAppSelector(state => state.auth.user);
+    const { currentSong, isPlaying } = song;
+    const auth = useAppSelector(state => state.auth);
+    const { user, isAuthenticated } = auth;
 
+    // Refs để tránh re-render không cần thiết
+    const currentTimeRef = useRef(currentTime);
+    const timeLeftRef = useRef(timeLeft);
+    const isPlayingRef = useRef(isPlaying);
+
+    // Cập nhật refs khi state thay đổi
+    useEffect(() => {
+        currentTimeRef.current = currentTime;
+        timeLeftRef.current = timeLeft;
+        isPlayingRef.current = isPlaying;
+    }, [currentTime, timeLeft, isPlaying]);
 
     const handleCreateListenHistory = useCallback(async () => {
-        const data = {
-            user_id: user.user_id,
-            song_id: currentSong.song_id,
-            video_id: ""
+        if (!isAuthenticated) return;
+        
+        try {
+            const data = {
+                user_id: user.user_id,
+                song_id: currentSong.song_id,
+                video_id: ""
+            };
+            const res = await callCreateListenHistory(data);
+            if (res.data) {
+                console.log("create listen history success");
+            } else {
+                console.log("create listen history failed:", res.message);
+            }
+        } catch (error) {
+            console.error("Error creating listen history:", error);
         }
+    }, [currentSong.song_id, user.user_id, isAuthenticated]);
 
-        const res = await callCreateListenHistory(data);
-        if(res.data) {
-            console.log("create listen history success");
-        }else {
-            console.log("create listen history failed:", res.message);
-        }
-    }, [currentSong, user]);
-
+    // Xử lý timeLeft và tạo lịch sử nghe
     useEffect(() => {
-        if(timeLeft < 0) return;
+        if (timeLeft < 0) return;
 
-        const times = setInterval(() => {
-            if(isPlaying) {
-                setTimeLeft(timeLeft - 1);
+        const timer = setTimeout(() => {
+            if (isPlayingRef.current) {
+                setTimeLeft(prev => {
+                    const newTime = prev - 1;
+                    if (newTime === 0 && isAuthenticated) {
+                        handleCreateListenHistory();
+                    }
+                    return newTime;
+                });
             }
         }, 1000);
 
-        if(timeLeft === 0) {
-            handleCreateListenHistory();
-        }
-        
-        return () => clearInterval(times);
-    }, [isPlaying, timeLeft, handleCreateListenHistory]);
+        return () => clearTimeout(timer);
+    }, [handleCreateListenHistory, isAuthenticated, timeLeft, isPlaying]);
 
+    // Reset timeLeft khi đổi bài hát
     useEffect(() => {
         setTimeLeft(60);
-    }, [currentSong]);
-    
-    // Cập nhật currentTime khi audio phát
-    useEffect(() => {
+    }, [currentSong.song_id]);
+
+    // Xử lý audio timeupdate
+    const handleTimeUpdate = useCallback(() => {
         if (!audio) return;
-        const handleTimeUpdate = () => {
-            setCurrentTime(audio.currentTime)
-            if(audio.currentTime === audio.duration){
-                if(isRepeat) {
-                    setTimeout(()=> {
-                        setCurrentTime(0);
-                        setTimeLeft(60);
-                        audio.play();
-                    }, 2000);
-                }else {
-                    dispatch(doNextSong());
-                }
+        
+        setCurrentTime(audio.currentTime);
+        
+        if (audio.currentTime === audio.duration) {
+            if (isRepeat) {
+                setTimeout(() => {
+                    setCurrentTime(0);
+                    setTimeLeft(60);
+                    audio.play();
+                }, 2000);
+            } else {
+                dispatch(doNextSong());
             }
-        };
-        audio.addEventListener('timeupdate', handleTimeUpdate);
-        return () => {
-            audio.removeEventListener('timeupdate', handleTimeUpdate);
-        };
+        }
     }, [audio, isRepeat, dispatch]);
 
+    // Thêm và xóa event listener cho audio
     useEffect(() => {
-        const song_time = window.localStorage.getItem("song_time");
-        setCurrentTime(song_time ? +song_time : 0);
-        if (audio) {
-            audio.currentTime = currentTime;
-        }
+        if (!audio) return;
+        
+        audio.addEventListener('timeupdate', handleTimeUpdate);
+        return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
+    }, [audio, handleTimeUpdate]);
+
+    // Khôi phục thời gian phát từ localStorage
+    useEffect(() => {
+        if (!audio) return;
+        
+        const savedTime = window.localStorage.getItem("song_time");
+        const initialTime = savedTime ? +savedTime : 0;
+        setCurrentTime(initialTime);
+        audio.currentTime = initialTime;
     }, [audio]);
 
-    // Lưu thời gian phát vào localStorage mỗi 3 giây khi đang phát
-    const currentTimeRef = useRef(currentTime);
-    useEffect(() => {
-        currentTimeRef.current = currentTime;
-    }, [currentTime]);
-
+    // Lưu thời gian phát vào localStorage
     useEffect(() => {
         if (!currentSong) return;
+        
         const interval = setInterval(() => {
-        window.localStorage.setItem('song_time', String(currentTimeRef.current));
+            window.localStorage.setItem('song_time', String(currentTimeRef.current));
         }, 3000);
+        
         return () => clearInterval(interval);
     }, [currentSong]);
 
-    // Khi nhả chuột slider (chính thức tua nhạc)
-    const handleSliderChangeComplete = (value: number) => {
+    // Xử lý khi tua nhạc
+    const handleSliderChangeComplete = useCallback((value: number) => {
         setCurrentTime(value);
         setSeekingTime(null);
         if (audio) {
             audio.currentTime = value;
         }
+    }, [audio]);
+
+    // Memoize slider props
+    const sliderProps: SliderSingleProps = {
+        className: 'custom-slider !m-0',
+        tooltip: { formatter: null },
+        min: 0,
+        max: currentSong.durations,
+        value: seekingTime !== null ? seekingTime : currentTime,
+        onChange: setSeekingTime,
+        onChangeComplete: handleSliderChangeComplete
     };
 
-    
     return (
         <div className="w-full mt-1 h-fit">
             <div className="flex justify-center items-center">
-                <div className="w-fit text-sm">{formatTime(seekingTime !== null ? seekingTime : currentTime)}</div>
-                <div className="w-full mx-3">
-                <Slider
-                    className='custom-slider !m-0'
-                    tooltip={{ formatter: null }}
-                    min={0}
-                    max={currentSong.durations}
-                    value={seekingTime !== null ? seekingTime : currentTime}
-                    onChange={(value) => setSeekingTime(value)}
-                    onChangeComplete={handleSliderChangeComplete}
-                />
+                <div className="w-fit text-sm">
+                    {formatTime(seekingTime !== null ? seekingTime : currentTime)}
                 </div>
-                <div className="w-fit text-sm">{formatTime(currentSong.durations)}</div>
+                <div className="w-full mx-3">
+                    <Slider {...sliderProps} />
+                </div>
+                <div className="w-fit text-sm">
+                    {formatTime(currentSong.durations)}
+                </div>
             </div>
         </div>
-  )
-}
+    );
+};
 
-export default ProcessBar
+export default ProcessBar;

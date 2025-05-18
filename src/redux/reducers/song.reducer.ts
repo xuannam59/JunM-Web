@@ -4,7 +4,6 @@ import { DEFAULT_SONG, ISong } from "@/types/song.type";
 interface ISongState {
     isPlaying: boolean;
     isCollapsed: boolean;
-    volumeValue: number;
     currentSong: ISong;
     playlist: ISong[];
     history: ISong[];
@@ -13,7 +12,6 @@ interface ISongState {
 const initialState: ISongState = {
     isPlaying: false,
     isCollapsed: false,
-    volumeValue: 0,
     currentSong: DEFAULT_SONG,
     playlist: [],
     history: [],
@@ -47,10 +45,6 @@ const songSlice = createSlice({
         },
         doSetIsCollapsed: (state) => {
             state.isCollapsed = !state.isCollapsed;
-        },
-        doSetVolumeValue: (state, action: PayloadAction<number>) => {
-            state.volumeValue = action.payload;
-            window.localStorage.setItem("volume", String(state.volumeValue));
         },
         doNextSong: (state) => {
             if (state.playlist.length > 0) {
@@ -136,6 +130,5 @@ const songSlice = createSlice({
 export const songReducer = songSlice.reducer;
 export const { 
     doPlaySong, doSetPlaylist,doSetHistory, doGetSongByLocalStorage,  
-    doSetIsPlaying, doNextSong, doBackSong, doSetIsCollapsed, doUpdateSongLikes,
-    doSetVolumeValue
+    doSetIsPlaying, doNextSong, doBackSong, doSetIsCollapsed, doUpdateSongLikes
 } = songSlice.actions;

@@ -1,6 +1,6 @@
 import { callGetSongDetail, callGetSongs } from '@/apis/song.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doGetSongByLocalStorage, doSetHistory, doSetPlaylist } from '@/redux/reducers/song.reducer';
+import { doGetSongByLocalStorage, doSetHistory, doSetPlaylist, doSetVolumeValue } from '@/redux/reducers/song.reducer';
 import React, { useCallback, useEffect, useRef} from 'react';
 import PlayerControls from './PlayerControls';
 import SongInfo from './SongInfo';
@@ -23,33 +23,24 @@ const PlayMusic: React.FC = () => {
         }
     }, [dispatch]);
 
-    const getSongs = useCallback(async () => {
-        const res = await callGetSongs("random=true&pageSize=15");
-        if(res.data) {
-            dispatch(doSetPlaylist(res.data.result));
-            window.localStorage.setItem("playlist", JSON.stringify(res.data.result));
-        }
-    }, [dispatch]);
-
     useEffect(() => {
         const playlistLocal = window.localStorage.getItem("playlist");
         const historyLocal = window.localStorage.getItem("history");
-    
+
         // Xử lý playlist
         if (playlistLocal && Array.isArray(JSON.parse(playlistLocal))) {
             const playlist: ISong[] = JSON.parse(playlistLocal);
             dispatch(doSetPlaylist(playlist));
         } else {
-            getSongs();
+            window.localStorage.setItem("playlist", JSON.stringify([]));
         }
     
         if (historyLocal && Array.isArray(JSON.parse(historyLocal)) && JSON.parse(historyLocal).length > 0) {
-           
             dispatch(doSetHistory(JSON.parse(historyLocal)));
         } else {
             window.localStorage.setItem("history", JSON.stringify([]));
         }
-    }, [dispatch, getSongs]);
+    }, [dispatch]);
 
     useEffect(() => {
         const song_id = window.localStorage.getItem("song_id");

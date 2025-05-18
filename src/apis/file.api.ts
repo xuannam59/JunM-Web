@@ -11,6 +11,10 @@ export const callUploadFile = (file: any, folderName: string) => {
         data: bodyFormData,
         headers: {
             "Content-Type": "multipart/form-data"
+        },
+        onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+            console.log(progress);
         }
     });
 }
