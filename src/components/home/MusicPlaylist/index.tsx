@@ -14,8 +14,8 @@ const MusicPlaylist = () => {
         return <History/>
     }
     return (
-        <div className="flex flex-col px-5 pb-0 pe-1 w-full h-full overflow-y-auto relative">
-			{/* Tabs giả lập */}
+        <div className="flex flex-col h-full">
+            {/* Tabs giả lập */}
             <div className={`flex gap-2 p-5 sticky top-0 z-10 ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}`}>
                 <button 
                 	className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer border border-transparent focus:outline-none
@@ -33,7 +33,9 @@ const MusicPlaylist = () => {
                 </button>
             </div>
 
-			{renderTab()}
+            <div className="flex-1 overflow-y-auto relative scrollbar-hide">
+                {renderTab()}
+            </div>
 		</div>
     );
 };

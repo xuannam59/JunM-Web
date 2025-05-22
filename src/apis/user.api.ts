@@ -19,5 +19,5 @@ export const callCreateListenHistory = (data: IListeningHistoryForm)=> {
 }
 
 export const callGetListenHistory = (query: unknown) => {
-    return axios.get<IBackendRes<IListeningHistory[]>>(`api/v1/users/listening-history/all?${query}`);
+    return axios.get<IBackendResWithPagination<IListeningHistory>>(`api/v1/users/listening-history/all?${query}`);
 }
