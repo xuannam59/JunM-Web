@@ -4,7 +4,7 @@ import { useTheme } from '@/utils/ThemeProvider'
 import playingAnimation from "@/assets/animations/playing.json";
 import React, { useCallback, useEffect, useState } from 'react'
 import Lottie from 'lottie-react';
-import { TbDots, TbPlayerPlay, TbThumbUp, TbThumbUpFilled } from 'react-icons/tb';
+import { TbDots, TbHeart, TbHeartFilled, TbPlayerPlay } from 'react-icons/tb';
 import { Button, Tooltip } from 'antd';
 import { doSetIsPlaying, doUpdateSongLikes } from '@/redux/reducers/song.reducer';
 import { callToggleLikeSong } from '@/apis/song.api';
@@ -112,17 +112,17 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
         </div>
         {/* Icon bên phải */}
         <div className="hidden group-hover:flex items-center ml-2">
-            <Tooltip title={isLiked ? "Dislike" : "Like"}>
+            <Tooltip title={isLiked ? "Bỏ yêu thích" : "Yêu thích"}>
                 <Button 
                     type='text' 
-                    className="hover:!text-[#8f5cff] transition" 
+                    className="hover:!text-[#FF0000] transition" 
                     shape="circle"
                     onClick={handleToggleLikeSong}
                 >
                     {isLiked ? 
-                    <TbThumbUpFilled size={20}/>
-                    :
-                    <TbThumbUp size={20}/>
+                        <TbHeartFilled size={20} className='text-[#FF0000]'/>
+                        :
+                        <TbHeart size={20}/>
                     }
                 </Button>
             </Tooltip>

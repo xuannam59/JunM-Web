@@ -2,7 +2,7 @@ import { routes } from '@/utils/constant'
 import { useTheme } from '@/utils/ThemeProvider'
 import type { MenuProps } from 'antd'
 import { Image, Menu } from 'antd'
-import { TbHistory, TbHome, TbPlaylist } from 'react-icons/tb'
+import { TbHistory, TbHome, TbLibrary, TbPlaylist } from 'react-icons/tb'
 import { Link, useLocation } from 'react-router-dom'
 
 
@@ -12,9 +12,14 @@ const SiderBar = () => {
 
     const menuItems: MenuProps['items'] = [
         {
+            key: '/library',
+            icon: <TbLibrary size={20}/>,
+            label: <Link to="/library">Thư viện</Link>
+        },
+        {
             key: `${routes.DEFAULT}`,
             icon: <TbHome size={20}/>,
-            label: <Link to={routes.DEFAULT}>Home</Link>
+            label: <Link to={routes.DEFAULT}>Khám phá</Link>
         },
         {
             key: '/playlists',

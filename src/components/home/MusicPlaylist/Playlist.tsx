@@ -29,7 +29,7 @@ const Playlist: React.FC = () => {
 	}
 
     return (
-        <div className="h-full px-5 overflow-y-auto scrollbar-hide">
+        <div className="h-full px-5 overflow-y-auto">
             {history.length > 0 && (
                 <div className="flex flex-col gap-1 opacity-60">
                     {history.map((song) => (

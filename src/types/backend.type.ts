@@ -9,7 +9,7 @@ export interface IBackendResWithPagination<T> {
     error?: string | string[];
     message: string;
     statusCode: number | string;
-    data?: {
+    data: {
         meta: {
             current: number;
             pageSize: number;

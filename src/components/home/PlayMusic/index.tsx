@@ -1,6 +1,6 @@
-import { callGetSongDetail, callGetSongs } from '@/apis/song.api';
+import { callGetSongDetail } from '@/apis/song.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doGetSongByLocalStorage, doSetHistory, doSetPlaylist, doSetVolumeValue } from '@/redux/reducers/song.reducer';
+import { doGetSongByLocalStorage, doSetHistory, doSetPlaylist } from '@/redux/reducers/song.reducer';
 import React, { useCallback, useEffect, useRef} from 'react';
 import PlayerControls from './PlayerControls';
 import SongInfo from './SongInfo';
@@ -48,7 +48,7 @@ const PlayMusic: React.FC = () => {
             getSong(song_id);
         }
     }, [getSong]);
-
+    
     
   return (
     <>

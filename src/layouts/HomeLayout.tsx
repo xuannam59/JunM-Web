@@ -12,7 +12,7 @@ const HomeLayout = () => {
 
     return (
         <>
-            <div className={`min-h-screen w-full max-w-[2560px] relative flex ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+            <div className={`min-h-screen max-w-[2560px] relative flex ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
                 <aside className={`w-[240px] min-h-[100vh] shadow-sm fixed left-0 top-0 bottom-0
                     ${darkMode ? `bg-[#292929] text-gray-300` : 'bg-[#F9F9F9] text-black'}`}
                 >
@@ -27,22 +27,25 @@ const HomeLayout = () => {
                     <Header />
                 </header>
 
-                <main 
-                    className={`w-[calc(100vw-240px)] ml-[240px] mt-[70px] min-h-[calc(100vh-70px)] p-[60px] transition-all
-                    ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}
-                    ${isCollapsed ? "mr-[330px]" : ""}`}
-                >
-                    <Outlet />
-                </main>
-
+                {/* Flex container for main and MusicPlaylist */}
                 <div
-                    className={`h-[calc(100vh-90px)] max-h-[calc(100vh-90px)] transition-all duration-200 fixed top-0 bottom-[90px] right-0
-                        border-l-1
-                        ${darkMode ? 'bg-[#1E1E1E] border-[#353535]' : 'bg-white border-[#E5E5E5]'}
-                        ${isCollapsed ? "w-[330px]" : "w-0"}
-                    `}
+                    className={`flex transition-all duration-200 w-[calc(100vw-240px)] ml-[240px] h-[calc(100vh-90px)]`}
                 >
-                    <MusicPlaylist/>
+                    {/* Main content */}
+                    <main className={`flex-1 min-w-0 p-[60px] overflow-y-auto mt-[70px] ${darkMode ? 'bg-[#1E1E1E]' : 'bg-white'}`}>
+                        <div className="h-full">
+                            <Outlet />
+                        </div>
+                    </main>
+                    {/* MusicPlaylist */}
+                    <div
+                        className={`transition-all duration-200 h-full border-l-1 overflow-hidden
+                            ${darkMode ? 'bg-[#1E1E1E] border-[#353535]' : 'bg-white border-[#E5E5E5]'}
+                            ${isCollapsed ? "w-[330px]" : "w-0"}`}
+                        style={{ minWidth: isCollapsed ? 330 : 0, maxWidth: isCollapsed ? 330 : 0 }}
+                    >
+                        <MusicPlaylist />
+                    </div>
                 </div>
 
                 <div 

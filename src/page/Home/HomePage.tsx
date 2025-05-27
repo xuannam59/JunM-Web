@@ -1,16 +1,15 @@
 // src/pages/Home.tsx
 import { callGetSongs } from '@/apis/song.api';
+import { callGetListenHistory } from '@/apis/user.api';
+import ListeningHistories from '@/components/home/ListeningHistories';
 import SongSuggestion from '@/components/home/SongSuggestion';
-import { useAppSelector } from '@/redux/hook';
 import { ISong } from '@/types/song.type';
-import { useTheme } from '@/utils/ThemeProvider';
+import { IListeningHistory } from '@/types/user.type';
 import React, { useCallback, useEffect, useState } from 'react';
 
 const Home: React.FC = () => {
-    const {darkMode} = useTheme();
     const [songsData, setSongsData] = useState<ISong[]>([]);
-
-    const user = useAppSelector(state => state.auth.user);
+    const [listeningHistories, setListeningHistories] = useState<IListeningHistory[]>([]);
 
     const getSongs = useCallback(async () => {
         const res = await callGetSongs("random=true&pageSize=9");
@@ -19,21 +18,30 @@ const Home: React.FC = () => {
         }
     }, []);
 
+    const getListeningHistories = useCallback(async () => {
+        const res = await callGetListenHistory("pageSize=12");
+        if(res.data) {
+            setListeningHistories(res.data.result);
+        }
+    }, []);
+
     useEffect(() => {
         getSongs();
     }, [getSongs]);
 
+    useEffect(() => {
+        getListeningHistories();
+    }, [getListeningHistories]);
+
     return (
-        <div className={`w-full min-h-[400px] overflow-scroll`}>
-            {user.listeningHistories.length > 0 && 
+        <div className="w-full min-h-[400px] h-full">
+            {listeningHistories.length > 0 && 
                 <div className="mb-8">
-                    <div className="flex">
-                        <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Nghe Gần Đây</h2>
-                    </div>
+                   <ListeningHistories listeningHistories={listeningHistories}/>
                 </div>
             }
 
-            <div className=" mb-8">
+            <div className="mb-8">
                 <SongSuggestion
                     songs={songsData}
                     getSongs={getSongs}

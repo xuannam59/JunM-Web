@@ -7,20 +7,20 @@ import { Empty, Spin } from "antd";
 
 const History = () => {
     const [listenHistory, setListenHistory] = useState<IListeningHistory[]>([]);
-    const [pageSize, setPageSize] = useState(11);
+    const [skip, setSkip] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [totalItems, setTotalItems] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     
     const getListenHistory = useCallback(async () => {
         setIsLoading(true);
-        const res = await callGetListenHistory(`pageSize=${pageSize}`);
+        const res = await callGetListenHistory(`pageSize=${11}&skip=${skip}`);
         if(res.data) {
-           setListenHistory(res.data.result);
+           setListenHistory([...listenHistory, ...res.data.result]);
            setTotalItems(res.data.meta.totalItems);
         }
         setIsLoading(false);
-    }, [pageSize]);
+    }, [skip]);
 
     useEffect(() => {
         getListenHistory();
@@ -35,12 +35,7 @@ const History = () => {
             if (scrollHeight - scrollTop - clientHeight < 100 && 
                 !isLoading && 
                 listenHistory.length < totalItems) {
-                setPageSize(prev => {
-                    if(prev + 5 >= totalItems) {
-                        return totalItems;
-                    }
-                    return prev + 5;
-                });
+                setSkip(listenHistory.length);
             }
         };
 
@@ -55,7 +50,7 @@ const History = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-full overflow-y-auto scrollbar-hide">
+        <div ref={containerRef} className="h-full overflow-y-auto">
             <div className="flex flex-col gap-1">
                 {listenHistory.length > 0 ? (
                     <>
