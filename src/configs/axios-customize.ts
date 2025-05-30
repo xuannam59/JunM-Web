@@ -39,8 +39,8 @@ instance.interceptors.request.use((config) => {
         config.url?.endsWith(endpoint)
     );
 
-    if (!shouldExcludeToken &&  typeof window !== "undefined" && window && window.localStorage && window.localStorage.getItem('access_token')) {
-        config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('access_token');
+    if (!shouldExcludeToken &&  typeof window !== "undefined" && window && window.localStorage && window.localStorage.getItem('junm_access_token')) {
+        config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('junm_access_token');
     }
 
     if (!config.headers.Accept && config.headers["Content-Type"]) {
@@ -60,14 +60,14 @@ instance.interceptors.response.use(
         if (
             error.config && error.response
             && +error.response.status === 401
-            && error.config.url !== '/api/v1/auths/login'
+            && error.config.url !== 'api/v1/auths/login'
             && !error.config.headers[NO_RETRY_HEADER] // không có biến này ở header thì mới retry
         ) {
             const access_token = await handleRefreshToken();
             error.config.headers[NO_RETRY_HEADER] = 'true'; // retry chỉ được 1 lần
             if (access_token) {
                 error.config.headers["Authorization"] = `Bearer ${access_token}`;
-                localStorage.setItem("access_token", access_token);
+                localStorage.setItem("junm_access_token", access_token);
                 return instance.request(error.config);
             }
         }
@@ -76,14 +76,14 @@ instance.interceptors.response.use(
         if (
             error.config && error.response
             && +error.response.status === 400
-            && error.config.url === "/api/v1/auths/refresh-token"
+            && error.config.url === "api/v1/auths/refresh-token"
         ) {
             if(location.pathname.startsWith("/admin")) {
                 const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
                 alert(message);
                 window.location.href = "/login";
             }
-            window.localStorage.removeItem("access_token");
+            window.localStorage.removeItem("junm_access_token");
             await handleLogout();
         }
         return error?.response?.data ?? Promise.reject(error);

@@ -24,26 +24,26 @@ const PlayMusic: React.FC = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        const playlistLocal = window.localStorage.getItem("playlist");
-        const historyLocal = window.localStorage.getItem("history");
+        const playlistLocal = window.localStorage.getItem("junm_playlist");
+        const historyLocal = window.localStorage.getItem("junm_history");
 
         // Xử lý playlist
         if (playlistLocal && Array.isArray(JSON.parse(playlistLocal))) {
             const playlist: ISong[] = JSON.parse(playlistLocal);
             dispatch(doSetPlaylist(playlist));
         } else {
-            window.localStorage.setItem("playlist", JSON.stringify([]));
+            window.localStorage.setItem("junm_playlist", JSON.stringify([]));
         }
     
         if (historyLocal && Array.isArray(JSON.parse(historyLocal)) && JSON.parse(historyLocal).length > 0) {
             dispatch(doSetHistory(JSON.parse(historyLocal)));
         } else {
-            window.localStorage.setItem("history", JSON.stringify([]));
+            window.localStorage.setItem("junm_history", JSON.stringify([]));
         }
     }, [dispatch]);
 
     useEffect(() => {
-        const song_id = window.localStorage.getItem("song_id");
+        const song_id = window.localStorage.getItem("junm_song_id");
         if(song_id) {
             getSong(song_id);
         }

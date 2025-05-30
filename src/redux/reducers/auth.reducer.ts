@@ -22,7 +22,7 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload.user;
-            window.localStorage.setItem("access_token", action.payload.access_token);
+            window.localStorage.setItem("junm_access_token", action.payload.access_token);
         },
         doGetAccount: (state, action: PayloadAction<IAuthState["user"]>) => {
             state.isAuthenticated = true;
@@ -31,7 +31,7 @@ const authSlice = createSlice({
         doLogout: (state) => {
             state.isAuthenticated = false;
             state.user = DEFAULT_USER;
-            window.localStorage.removeItem("access_token");
+            window.localStorage.removeItem("junm_access_token");
         }
     }
 });

@@ -1,20 +1,34 @@
+import { useAppSelector } from '@/redux/hook'
 import { routes } from '@/utils/constant'
 import { useTheme } from '@/utils/ThemeProvider'
 import type { MenuProps } from 'antd'
 import { Image, Menu } from 'antd'
+import { useState } from 'react'
 import { TbHistory, TbHome, TbLibrary, TbPlaylist } from 'react-icons/tb'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import RequestLoginModal from '../modals/RequestLoginModal'
 
 
 const SiderBar = () => {
     const { darkMode } = useTheme()
     const location = useLocation()
+    const navigate = useNavigate()
+    const [openRequestLoginModal, setOpenRequestLoginModal] = useState(false);
+
+    const auth = useAppSelector(state => state.auth);
 
     const menuItems: MenuProps['items'] = [
         {
             key: '/library',
             icon: <TbLibrary size={20}/>,
-            label: <Link to="/library">Thư viện</Link>
+            label: "Thư viện",
+            onClick: () => {
+                if (!auth.isAuthenticated) {
+                    setOpenRequestLoginModal(true)
+                    return;
+                }
+                navigate(`/${routes.LIBRARY}`)
+            }
         },
         {
             key: `${routes.DEFAULT}`,
@@ -53,6 +67,11 @@ const SiderBar = () => {
                     theme={darkMode ? 'dark' : 'light'}
                 />
             </div>
+
+            <RequestLoginModal
+                open={openRequestLoginModal}
+                onClose={() => setOpenRequestLoginModal(false)}
+            />
         </>
 
     )

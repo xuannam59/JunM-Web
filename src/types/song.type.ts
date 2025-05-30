@@ -1,11 +1,13 @@
 import { DEFAULT_ARTIST, IArtist } from "./artist.type";
 import { IPlaylistSong } from "./playlist.type";
-import { IListeningHistory } from "./user.type";
+import { DEFAULT_USER, IListeningHistory, IUser } from "./user.type";
 
 export interface ILike {
     user_id: string;
     song_id: string;
-    liked_at?: Date;
+    song: ISong;
+    user: IUser;
+    liked_at: Date;
 }
 
 export interface ISong{
@@ -45,11 +47,6 @@ export interface ISongFilter {
 }
 
 // DEFAULT
-export const DEFAULT_LIKE: ILike = {
-    user_id: "",
-    song_id: "",
-};
-
 export const DEFAULT_SONG: ISong = {
     song_id: "",
     title: "",
@@ -64,6 +61,14 @@ export const DEFAULT_SONG: ISong = {
     likes: [],
     playlistSongs: [],
     listeningHistory: []
+};
+
+export const DEFAULT_LIKE: ILike = {
+    user_id: "",
+    song_id: "",
+    song: DEFAULT_SONG,
+    user: DEFAULT_USER,
+    liked_at: new Date()    
 };
 
 export const  DEFAULT_SONG_FILTER = {

@@ -13,6 +13,7 @@ import LoginPage from '@/page/auth/LoginPage'
 import RegisterPage from '@/page/auth/RegisterPage'
 import NotFound from '@/page/error/NotFound'
 import HomePage from '@/page/home/HomePage'
+import LibraryPage from '@/page/library/LibraryPage'
 import { routes } from '@/utils/constant'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
@@ -22,6 +23,8 @@ const Routers = () => {
             <Routes>
                 <Route element={<HomeLayout />}>
                     <Route path={routes.DEFAULT} element={<HomePage />} />
+                    <Route path={routes.LIBRARY} element={<LibraryPage/>} />
+                    <Route path={routes.PLAYLIST} element={""} />
                 </Route>
                 <Route element={<AuthLayout />}>
                     <Route path={routes.LOGIN} element={<LoginPage />} />

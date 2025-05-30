@@ -7,6 +7,7 @@ import { useState } from 'react'
 import ButtonGoogleLogin from '@/components/auth/ButtonLoginGoogle'
 import { routes } from '@/utils/constant'
 import { callRegister } from '@/apis/auth.api'
+import ButtonPrimary from '@/components/common/ButtonPrimary'
 
 const { Title } = Typography
 
@@ -108,17 +109,13 @@ const RegisterPage = () => {
           />
         </Form.Item>
       </Form>
-      <Button 
-        type="primary" 
-        htmlType="submit" 
-        block 
-        size="large"
-        className="rounded-lg !bg-gradient-to-r from-purple-500 to-pink-500 !border-none opacity-80 hover:opacity-100"
+      
+      <ButtonPrimary
+        title="Register"
         onClick={() => form.submit()}
         loading={isLoading}
-      >
-        Register
-      </Button>
+        className="w-full !h-[40px]"
+      />
 
     <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
 

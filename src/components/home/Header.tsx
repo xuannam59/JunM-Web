@@ -7,6 +7,7 @@ import { App, Avatar, Button, Dropdown, Input, MenuProps, Tooltip } from 'antd';
 import React from 'react';
 import { TbArrowLeft, TbArrowRight, TbLayoutDashboard, TbLogout, TbMoon, TbSearch, TbSettings, TbSun } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
+import ButtonPrimary from '@/components/common/ButtonPrimary';
 
 const Header: React.FC = () => {
     const {message, notification} = App.useApp();
@@ -87,8 +88,12 @@ const Header: React.FC = () => {
                     </Dropdown> 
                     : 
                     <div className="flex gap-2">
-                        <Button type='primary' onClick={() => navigate("/login")}>Đăng nhập</Button>
-                        <Button color="primary" variant="outlined" onClick={() => navigate("/register")}>Đăng ký</Button>
+                        <ButtonPrimary
+                            onClick={() => navigate(`/${routes.LOGIN}`)}
+                            title="Đăng nhập"
+                        />
+
+                        <Button color="primary" variant="outlined" onClick={() => navigate(`/${routes.REGISTER}`)}>Đăng ký</Button>
                     </div>
                     }
                 </div>

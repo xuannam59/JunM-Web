@@ -11,13 +11,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('theme') === 'dark';
+    return localStorage.getItem('junm_theme') === 'dark';
   });
 
   const toggleTheme = () => {
     setDarkMode((prev) => {
       const newMode = !prev;
-      localStorage.setItem('theme', newMode ? 'dark' : 'light');
+      localStorage.setItem('junm_theme', newMode ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark', !darkMode);
       return newMode;
     });

@@ -14,7 +14,7 @@ interface VolumeControlProps {
 const VolumeControl: React.FC<VolumeControlProps> = ({ audio }) => {
     const { darkMode } = useTheme();
     const [volumeValue, setVolumeValue] = useState(() => {
-        const savedVolume = window.localStorage.getItem("volume");
+        const savedVolume = window.localStorage.getItem("junm_volume");
         return savedVolume ? +savedVolume : 0.25;
     });
 
@@ -32,12 +32,12 @@ const VolumeControl: React.FC<VolumeControlProps> = ({ audio }) => {
     }, []);
 
     const handleChangeVolumeComplete = useCallback((value: number) => {
-        window.localStorage.setItem("volume", value.toString());
+        window.localStorage.setItem("junm_volume", value.toString());
     }, []);
 
     const handleToggleMute = useCallback(() => {
         if (volumeValue === 0) {
-            const savedVolume = window.localStorage.getItem("volume");
+            const savedVolume = window.localStorage.getItem("junm_volume");
             const newVolume = savedVolume ? +savedVolume : 0.25;
             setVolumeValue(newVolume);
             if (audio) {

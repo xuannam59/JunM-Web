@@ -10,6 +10,10 @@ export const callGetSongs = (query: unknown) => {
     return axios.get<IBackendResWithPagination<ISong>>(`api/v1/songs/all?${query}`);
 }
 
+export const callGetFavoriteSongs = (query: unknown) => {
+    return axios.get<IBackendResWithPagination<ISong>>(`api/v1/songs/favorite?${query}`);
+}
+
 export const callCreateSong = (data: ISongForm) => {
     return axios.post<IBackendRes<ISong>>(`api/v1/songs/create`, data);
 }

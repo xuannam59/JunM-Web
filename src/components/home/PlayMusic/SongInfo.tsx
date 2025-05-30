@@ -1,6 +1,5 @@
 import { callToggleLikeSong } from '@/apis/song.api';
-import { useAppSelector, useAppDispatch } from '@/redux/hook';
-import { doUpdateSongLikes } from '@/redux/reducers/song.reducer';
+import { useAppSelector } from '@/redux/hook';
 import { App, Button, Tooltip } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { TbDots, TbHeart, TbHeartFilled } from 'react-icons/tb';
@@ -10,8 +9,7 @@ const SongInfo: React.FC = () => {
     const [animation, setAnimation] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
 
-    const {message, notification} = App.useApp()
-    const dispatch = useAppDispatch();
+    const {message, notification} = App.useApp();
 
     const auth = useAppSelector(state => state.auth);
     const {isAuthenticated, user} = auth;
@@ -38,25 +36,20 @@ const SongInfo: React.FC = () => {
         if(res.data){
             message.success(res.data);
             setIsLiked(!isLiked);
-            dispatch(doUpdateSongLikes({
-                song_id: currentSong.song_id,
-                user_id: user.user_id,
-                isLiked: !isLiked
-            }));
         }else{
             notification.error({
                 message: "Like error",
                 description: res.message
             });
         }
-    }, [currentSong.song_id, isAuthenticated, message, notification, isLiked, dispatch, user.user_id]);
+    }, [currentSong.song_id, isAuthenticated, message, notification, isLiked]);
 
   return (
     <div className="w-[30%] flex items-center">
         <div className="flex items-center">
             <div className="w-[64px] h-[64px] rounded-sm overflow-hidden mr-4">
             <img
-                src={currentSong.thumbnail_url || "https://placehold.co/64x64.png"}
+                src={currentSong.thumbnail_url || "/images/default-thumbnail.webp"}
                 alt={currentSong.title || "song-thumb"}
                 className="w-full h-full object-cover"
             />

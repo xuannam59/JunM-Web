@@ -9,6 +9,7 @@ import { App, Button, Divider, Form, Input, Typography } from 'antd'
 import { useState } from 'react'
 import { TbLock, TbMail } from 'react-icons/tb'
 import { Link, useNavigate } from 'react-router-dom'
+import ButtonPrimary from '@/components/common/ButtonPrimary'
 const { Title } = Typography
 
 const LoginPage = () => {
@@ -94,16 +95,13 @@ const LoginPage = () => {
             </Link>
           </div>
         </Form>
-        <Button
-          type="primary"
-          block
-          size="large"
-          className="rounded-lg !bg-gradient-to-r from-purple-500 to-pink-500 !border-none opacity-80 hover:opacity-100"
-          loading={isLoading}
+        
+        <ButtonPrimary
+          title="Login"
           onClick={() => form.submit()}
-        >
-          Login
-        </Button>
+          loading={isLoading}
+          className="w-full !h-[40px]"
+        />
 
         <Divider className={darkMode ? 'text-gray-400' : ''}>or</Divider>
 

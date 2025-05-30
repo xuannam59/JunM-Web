@@ -6,9 +6,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Lottie from 'lottie-react';
 import { TbDots, TbHeart, TbHeartFilled, TbPlayerPlay } from 'react-icons/tb';
 import { Button, Tooltip } from 'antd';
-import { doSetIsPlaying, doUpdateSongLikes } from '@/redux/reducers/song.reducer';
+import { doSetIsPlaying } from '@/redux/reducers/song.reducer';
 import { callToggleLikeSong } from '@/apis/song.api';
 import { App } from 'antd';
+import RequestLoginModal from '@/components/modals/RequestLoginModal';
 
 interface IProp {
     songData: ISong;
@@ -20,6 +21,7 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
     const {message, notification} = App.useApp();
 
     const [isLiked, setIsLiked] = useState(false);
+    const [isOpenRequestLoginModal, setIsOpenRequestLoginModal] = useState(false);
 
     const dispatch = useAppDispatch();
     const song = useAppSelector(state => state.song);
@@ -33,18 +35,13 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
 
     const handleToggleLikeSong = useCallback(async() => {
         if(!isAuthenticated) {
-            message.error("Please login to like song");
+            setIsOpenRequestLoginModal(true);
             return;
         }
         const res = await callToggleLikeSong(songData.song_id);
         if(res.data){
             message.success(res.data);
             setIsLiked(!isLiked);
-            dispatch(doUpdateSongLikes({
-                song_id: songData.song_id,
-                user_id: user.user_id,
-                isLiked: !isLiked
-            }));
         }else{
             notification.error({
                 message: "Like error",
@@ -53,7 +50,9 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
         }
     }, [songData.song_id, isAuthenticated, message, notification, isLiked, dispatch, user.user_id]);
 
-  return (
+  return ( <>
+  
+  
     <div
         key={songData.song_id}
         className={`flex items-center group p-2 rounded-lg transition relative
@@ -63,7 +62,7 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
     >
         <div className="relative w-9 h-9 sm:w-12 sm:h-12 flex-shrink-0">
             <img
-                src={songData.thumbnail_url || ""}
+                src={songData.thumbnail_url || "/images/default-thumbnail.webp"}
                 alt={songData.title}
                 className="w-full h-full rounded-md object-cover shadow-md"
             />
@@ -129,6 +128,11 @@ const SongCommon: React.FC<IProp> = ({songData, handlePlaySong}) => {
             <Button type='text' className="hover:!text-[#8f5cff] transition" shape="circle"><TbDots size={20}/></Button>
         </div>
     </div>
+    <RequestLoginModal
+        open={isOpenRequestLoginModal}
+        onClose={() => setIsOpenRequestLoginModal(false)}
+    />
+  </>
   )
 }
 

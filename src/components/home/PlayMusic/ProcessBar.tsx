@@ -13,7 +13,7 @@ interface IProp {
 
 const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
     const [currentTime, setCurrentTime] = useState(() => {
-        const savedTime = window.localStorage.getItem("song_time");
+        const savedTime = window.localStorage.getItem("junm_song_time");
         return savedTime ? +savedTime : 0;
     });
     const [seekingTime, setSeekingTime] = useState<number | null>(null);
@@ -112,7 +112,7 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
     useEffect(() => {
         if (!audio) return;
         
-        const savedTime = window.localStorage.getItem("song_time");
+        const savedTime = window.localStorage.getItem("junm_song_time");
         const initialTime = savedTime ? +savedTime : 0;
         setCurrentTime(initialTime);
         audio.currentTime = initialTime;
@@ -123,7 +123,7 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
         if (!currentSong) return;
         
         const interval = setInterval(() => {
-            window.localStorage.setItem('song_time', String(currentTimeRef.current));
+            window.localStorage.setItem('junm_song_time', String(currentTimeRef.current));
         }, 3000);
         
         return () => clearInterval(interval);

@@ -1,5 +1,3 @@
-import { ISong } from "@/types/song.type";
-import { IUser } from "@/types/user.type";
 import { UploadFile } from "antd";
 import { UploadChangeParam } from "antd/es/upload";
 
@@ -9,6 +7,8 @@ export const routes = {
     LOGIN: "login",
     REGISTER: "register",
     GOOGLE: "google/:access_token",
+    LIBRARY: "library",
+    PLAYLIST: "playlist",
     // admin
     ADMIN: "admin",
     ADMIN_USER: "users",

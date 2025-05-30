@@ -39,7 +39,7 @@ const HomeLayout = () => {
                     </main>
                     {/* MusicPlaylist */}
                     <div
-                        className={`transition-all duration-200 h-full border-l-1 overflow-hidden
+                        className={`transition-all duration-500 h-full border-l-1 overflow-hidden
                             ${darkMode ? 'bg-[#1E1E1E] border-[#353535]' : 'bg-white border-[#E5E5E5]'}
                             ${isCollapsed ? "w-[330px]" : "w-0"}`}
                         style={{ minWidth: isCollapsed ? 330 : 0, maxWidth: isCollapsed ? 330 : 0 }}

@@ -1,6 +1,5 @@
 import { callToggleLikeSong } from '@/apis/song.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { doUpdateSongLikes } from '@/redux/reducers/song.reducer';
 import { IListeningHistory } from '@/types/user.type';
 import { useTheme } from '@/utils/ThemeProvider';
 import { App, Button, Tooltip } from 'antd';
@@ -9,7 +8,7 @@ import { TbChevronRight, TbChevronLeft, TbDots, TbHeart, TbHeartFilled, TbPlayer
 
 interface IProps {  
     listeningHistories: IListeningHistory[]
-}
+}   
 
 const CARD_WIDTH = 148; // width + gap
 
@@ -37,11 +36,7 @@ const ListeningHistories: React.FC<IProps> = ({listeningHistories}) => {
         const res = await callToggleLikeSong(song_id);
         if(res.data){
             message.success(res.data);
-            dispatch(doUpdateSongLikes({
-                song_id: song_id,
-                user_id: user.user_id,
-                isLiked: !isLiked
-            }));
+           
         }else{
             notification.error({
                 message: "Like error",
