@@ -1,5 +1,5 @@
 import PlaylistLibrary from "@/components/library/PlaylistLibrary"
-import TabLibrary from "@/components/library/tabs/TabLibrary"
+import TabLibrary from "@/components/library/tabs"
 import { Button } from "antd"
 import { TbPlayerPlayFilled } from "react-icons/tb"
 
