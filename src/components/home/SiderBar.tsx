@@ -38,7 +38,7 @@ const SiderBar = () => {
         {
             key: '/playlists',
             icon: <TbPlaylist size={20}/>,
-            label: <Link to="/playlists">Playlists</Link>
+            label: <Link to="/playlist">Playlists</Link>
         },
         {
             key: '/history',

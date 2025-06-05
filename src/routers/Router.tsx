@@ -14,6 +14,8 @@ import RegisterPage from '@/page/auth/RegisterPage'
 import NotFound from '@/page/error/NotFound'
 import HomePage from '@/page/home/HomePage'
 import LibraryPage from '@/page/library/LibraryPage'
+import PlaylistDetail from '@/page/playlist/PlaylistDetail'
+import PlaylistPage from '@/page/playlist/PlaylistPage'
 import { routes } from '@/utils/constant'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
@@ -24,7 +26,10 @@ const Routers = () => {
                 <Route element={<HomeLayout />}>
                     <Route path={routes.DEFAULT} element={<HomePage />} />
                     <Route path={routes.LIBRARY} element={<LibraryPage/>} />
-                    <Route path={routes.PLAYLIST} element={""} />
+                    <Route path={routes.PLAYLIST}>
+                        <Route index element={<PlaylistPage />} />
+                        <Route path={":id"} element={<PlaylistDetail />} />
+                    </Route>
                 </Route>
                 <Route element={<AuthLayout />}>
                     <Route path={routes.LOGIN} element={<LoginPage />} />

@@ -6,6 +6,10 @@ export const callGetPlaylists = (query: unknown) => {
     return axios.get<IBackendResWithPagination<IPlayList>>(`api/v1/playlists/all?${query}`);
 }
 
+export const callGetPlaylistById = (id: string) => {
+    return axios.get<IBackendRes<IPlayList>>(`api/v1/playlists/${id}`);
+}
+
 export const callCreatePlaylist = (data: IPlayListForm) => {
     return axios.post<IBackendRes<IPlayList>>(`api/v1/playlists/create`, data);
 }
