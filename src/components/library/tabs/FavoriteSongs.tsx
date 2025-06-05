@@ -4,7 +4,7 @@ import { DEFAULT_SONG, ISong } from "@/types/song.type";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "@/utils/ThemeProvider";
 import { formatTime } from "@/utils/song.constant";
-import { TbHeartFilled, TbPlayerPlay } from "react-icons/tb";
+import { TbPlayerPlay } from "react-icons/tb";
 import { doPlaySong, doSetHistory, doSetIsPlaying, doSetPlaylist } from "@/redux/reducers/song.reducer";
 import playingAnimation from "@/assets/animations/playing.json";
 import Lottie from "lottie-react";
@@ -73,7 +73,11 @@ const FavoriteSongs = () => {
                             <td className="py-2 px-4">
                                 <div className="flex items-center gap-3">
                                     <div className="relative w-10 h-10">
-                                        <img src={song.thumbnail_url} alt={song.title} className="w-10 h-10 rounded-md object-cover" />
+                                        <img 
+                                        src={song.thumbnail_url || "/images/default-thumbnail.webp"} 
+                                        alt={song.title} 
+                                        className="w-10 h-10 rounded-md object-cover" 
+                                        />
                                        <div 
                                             className={`absolute inset-0 items-center justify-center bg-black/50 rounded-md cursor-pointer
                                                 ${selectedSong.song_id === song.song_id ? 'flex' : 'hidden group-hover:flex'}
