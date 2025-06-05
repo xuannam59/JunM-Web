@@ -8,6 +8,7 @@ import { TbHeartFilled, TbPlayerPlay } from "react-icons/tb";
 import { doPlaySong, doSetHistory, doSetIsPlaying, doSetPlaylist } from "@/redux/reducers/song.reducer";
 import playingAnimation from "@/assets/animations/playing.json";
 import Lottie from "lottie-react";
+import ButtonHeart from "@/components/common/ButtonHeart";
     
 const FavoriteSongs = () => {
     const {darkMode} = useTheme();
@@ -98,7 +99,7 @@ const FavoriteSongs = () => {
                             </td>
                             <td className="py-2 px-4 text-right">
                                 <div className="flex items-center gap-8 justify-end">
-                                    <TbHeartFilled className="text-[#FF0000]" size={18} />
+                                    <ButtonHeart song={song}/>
                                     <span className="text-sm text-gray-400">{formatTime(song.durations)}</span>
                                 </div>
                             </td>

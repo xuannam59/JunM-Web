@@ -1,13 +1,13 @@
-import { Button, Tooltip } from "antd"
-import { TbPlus, TbX, TbPlayerPlayFilled, TbDots } from "react-icons/tb"
+import { Button, message, Modal, Tooltip } from "antd"
+import { TbPlus, TbX, TbPlayerPlayFilled, TbDots, TbExclamationMark } from "react-icons/tb"
 import { useTheme } from "@/utils/ThemeProvider";
 import { useCallback, useEffect, useState } from "react";
-import { callGetPlaylists } from "@/apis/playlist.api";
+import { callDeletePlaylist, callGetPlaylists } from "@/apis/playlist.api";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { ISong } from "@/types/song.type";
 import { doPlaySong, doSetHistory, doSetPlaylist } from "@/redux/reducers/song.reducer";
 
-
+const { confirm } = Modal;
 
 const PlaylistLibrary: React.FC = () => {
     const {darkMode} = useTheme();
@@ -63,6 +63,22 @@ const PlaylistLibrary: React.FC = () => {
         window.localStorage.setItem("junm_song_id", currentSong.song_id);
     }
 
+    const showConfirm = (playlistId: string) => {
+        confirm({
+          title: 'Xóa playlist',
+          content: 'Bạn có chắc chắn muốn xóa playlist này không?',
+          onOk: async () => {
+            const res = await callDeletePlaylist(playlistId);
+            if(res.data) {
+                setPlaylists(prev => prev.filter(vl => vl.id !== playlistId));
+                message.success('Xóa playlist thành công');
+            } else {
+                message.error('Xóa playlist thất bại');
+            }
+          },
+        });
+      };
+
   return (
    <>
     <div className="flex items-center gap-1">
@@ -81,7 +97,7 @@ const PlaylistLibrary: React.FC = () => {
         </div>
     </div>
     <div className="flex items-center flex-row gap-3 mt-4">
-        {playlists.map(vl => (
+        {playlists.map((vl) => (
             <div key={vl.id} className="flex flex-col gap-1 w-[20%]">
                 <div className="w-full group/playlist overflow-hidden rounded-sm cursor-pointer">
                     <div className="relative bg-gray-800">
@@ -95,8 +111,12 @@ const PlaylistLibrary: React.FC = () => {
                         >
                             <div className='hover:bg-[rgba(255,255,255,0.3)] rounded-full p-1.5'>
                                 <Tooltip title="Xóa">
-                                    <TbX size={20} className='text-white'/>
-                                </Tooltip>
+                                    <TbX 
+                                        size={20} 
+                                        className='text-white'
+                                        onClick={() => showConfirm(vl.id)}
+                                    />
+                                </Tooltip> 
                             </div>
                             <div className='border-2 border-white rounded-full p-1.5'>
                                 <TbPlayerPlayFilled

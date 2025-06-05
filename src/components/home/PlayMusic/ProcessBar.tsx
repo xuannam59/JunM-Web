@@ -23,7 +23,7 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
     const song = useAppSelector(state => state.song);
     const { currentSong, isPlaying } = song;
     const auth = useAppSelector(state => state.auth);
-    const { user, isAuthenticated } = auth;
+    const { isAuthenticated } = auth;
 
     // Refs để tránh re-render không cần thiết
     const currentTimeRef = useRef(currentTime);
@@ -42,7 +42,6 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
         
         try {
             const data = {
-                user_id: user.user_id,
                 song_id: currentSong.song_id,
                 video_id: ""
             };
@@ -55,11 +54,11 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
         } catch (error) {
             console.error("Error creating listen history:", error);
         }
-    }, [currentSong.song_id, user.user_id, isAuthenticated]);
+    }, [currentSong.song_id, isAuthenticated]);
 
     // Xử lý timeLeft và tạo lịch sử nghe
     useEffect(() => {
-        if (timeLeft < 0) return;
+        if (timeLeft <= 0) return;
 
         const timer = setTimeout(() => {
             if (isPlayingRef.current) {
@@ -138,17 +137,6 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
         }
     }, [audio]);
 
-    // Memoize slider props
-    const sliderProps: SliderSingleProps = {
-        className: 'custom-slider !m-0',
-        tooltip: { formatter: null },
-        min: 0,
-        max: currentSong.durations,
-        value: seekingTime !== null ? seekingTime : currentTime,
-        onChange: setSeekingTime,
-        onChangeComplete: handleSliderChangeComplete
-    };
-
     return (
         <div className="w-full mt-1 h-fit">
             <div className="flex justify-center items-center">
@@ -156,7 +144,15 @@ const ProcessBar: React.FC<IProp> = ({ audio, isRepeat }) => {
                     {formatTime(seekingTime !== null ? seekingTime : currentTime)}
                 </div>
                 <div className="w-full mx-3">
-                    <Slider {...sliderProps} />
+                    <Slider 
+                        className="custom-slider !m-0"
+                        tooltip={{ formatter: null }}
+                        min={0}
+                        max={currentSong.durations}
+                        value={seekingTime !== null ? seekingTime : currentTime}
+                        onChange={setSeekingTime}
+                        onChangeComplete={handleSliderChangeComplete}
+                    />
                 </div>
                 <div className="w-fit text-sm">
                     {formatTime(currentSong.durations)}

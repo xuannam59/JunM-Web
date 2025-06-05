@@ -24,7 +24,7 @@ export interface ISong{
     artist: IArtist;
     created_at?: Date;
     updated_at?: Date;
-    likes: ILike[];
+    likes: string[];
     playlistSongs: IPlaylistSong[];
     listeningHistory: IListeningHistory[];
 }

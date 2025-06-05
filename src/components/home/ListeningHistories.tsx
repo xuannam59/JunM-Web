@@ -1,10 +1,10 @@
-import { callToggleLikeSong } from '@/apis/song.api';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { IListeningHistory } from '@/types/user.type';
 import { useTheme } from '@/utils/ThemeProvider';
-import { App, Button, Tooltip } from 'antd';
-import React, { useCallback, useRef } from 'react';
-import { TbChevronRight, TbChevronLeft, TbDots, TbHeart, TbHeartFilled, TbPlayerPlayFilled } from 'react-icons/tb';
+import { Button } from 'antd';
+import React, { useRef } from 'react';
+import { TbChevronRight, TbChevronLeft, TbDots, TbPlayerPlayFilled } from 'react-icons/tb';
+import ButtonHeart from '../common/ButtonHeart';
+import { DEFAULT_SONG } from '@/types/song.type';
 
 interface IProps {  
     listeningHistories: IListeningHistory[]
@@ -15,11 +15,7 @@ const CARD_WIDTH = 148; // width + gap
 const ListeningHistories: React.FC<IProps> = ({listeningHistories}) => {
     const {darkMode} = useTheme();
 
-    const {message, notification} = App.useApp();
-    const auth = useAppSelector(state => state.auth);
-    const {isAuthenticated, user} = auth;
     const scrollRef = useRef<HTMLDivElement>(null);
-    const dispatch = useAppDispatch();
 
     const handleScroll = (dir: 'left' | 'right') => {
         if (scrollRef.current) {
@@ -27,23 +23,6 @@ const ListeningHistories: React.FC<IProps> = ({listeningHistories}) => {
             scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     };
-
-    const handleToggleLikeSong = useCallback(async(song_id: string, isLiked: boolean) => {
-        if(!isAuthenticated) {
-            message.error("Please login to like song");
-            return;
-        }
-        const res = await callToggleLikeSong(song_id);
-        if(res.data){
-            message.success(res.data);
-           
-        }else{
-            notification.error({
-                message: "Like error",
-                description: res.message
-            });
-        }
-    }, [isAuthenticated, message, notification, dispatch, user.user_id]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -84,7 +63,6 @@ const ListeningHistories: React.FC<IProps> = ({listeningHistories}) => {
                     style={{ scrollBehavior: 'smooth', overflow: 'hidden' }}
                 >
                     {listeningHistories.map((history) => {
-                        let isLiked = history.song?.likes?.some((like) => like.user_id === user?.user_id);
                         return (
                         <div
                             key={history.history_id}
@@ -99,29 +77,7 @@ const ListeningHistories: React.FC<IProps> = ({listeningHistories}) => {
                                 {/* Overlay play/like/dots */}
                                 <div className="absolute inset-0 flex items-center gap-1 justify-center bg-black/30 opacity-0 group-hover/card:opacity-100 transition">
                                     <div className='hover:bg-[#f2f2f2f2]/50 rounded-full p-1.5'>
-                                    <Tooltip title={isLiked ? "Bỏ yêu thích" : "Yêu thích"}>
-                                        {isLiked? (
-                                            <TbHeartFilled 
-                                                size={20} 
-                                                className='text-[#ff0000]'
-                                                onClick={() => {
-                                                    if(history.song?.song_id) {
-                                                        handleToggleLikeSong(history.song?.song_id, false);
-                                                    }
-                                                }}
-                                            />
-                                        ) : (
-                                            <TbHeart 
-                                                size={20} 
-                                                className='text-white'
-                                                onClick={() => {
-                                                    if(history.song?.song_id) {
-                                                        handleToggleLikeSong(history.song?.song_id, true);
-                                                    }
-                                                }}
-                                            />
-                                        )}
-                                    </Tooltip>
+                                        <ButtonHeart song={history.song || DEFAULT_SONG}/>
                                     </div>
                                     <div className='border-2 border-white rounded-full p-1.5'>
                                         <TbPlayerPlayFilled size={20} className='text-white'/>
