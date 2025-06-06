@@ -42,6 +42,7 @@ const songSlice = createSlice({
         },
         doSetHistory: (state, action: PayloadAction<ISong[]>) => {
             state.history = action.payload;
+            window.localStorage.setItem("junm_history", JSON.stringify(state.history));
         },
         doSetIsCollapsed: (state) => {
             state.isCollapsed = !state.isCollapsed;
@@ -81,7 +82,8 @@ const songSlice = createSlice({
                     // Thêm bài hát hiện tại vào đầu playlist
                     state.playlist.unshift(state.currentSong);
                     state.currentSong = previousSong;
-                        window.localStorage.setItem("junm_song_id", state.currentSong.song_id);
+                    
+                    window.localStorage.setItem("junm_song_id", state.currentSong.song_id);
                     window.localStorage.setItem("junm_song_time", "0");
                     window.localStorage.setItem("junm_playlist", JSON.stringify(state.playlist));
                     window.localStorage.setItem("junm_history", JSON.stringify(state.history));

@@ -24,7 +24,7 @@ export interface IPlayList {
 export interface IPlayListForm {
     playlist_id: string;
     title: string;
-    is_public: string;
+    is_public: boolean;
     songs: string[];
 }
 
